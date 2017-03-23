@@ -69,7 +69,7 @@
 %\renewcommand{\cftsecpresnum}{Chapter }
 
 \renewcommand{\cftsecnumwidth}{7em}
-\renewcommand{\thesection}{{\ctxfbb Chapter}~~ \arabic{section}}
+\renewcommand{\thesection}{\arabic{section}}
 \renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
 \renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
 % \renewcommand{\appendixpagename}{\Large\ctxfbb Appendix} % \ctxfb
@@ -117,7 +117,7 @@ stringstyle=\color{mauve},
 
 
 \begin{document}
-
+\setcounter{section}{1}
 \section{Statistical Learning}
 \subsection{\textbf{Model}}
 Often, our model can be illustrated as below

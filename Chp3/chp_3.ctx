@@ -112,7 +112,7 @@
 % =============================
 
 \begin{document}
-\setcounter{section}{1}
+\setcounter{section}{2}
 \section{Linear Regression}
 \label{Linear Regression}
 \subsection{\textbf{Other Considerations in the Regression Model}}
