@@ -410,6 +410,7 @@ To indicate that a $p$-dimensional random variable $X$ has a multivariate Gaussi
 
 \subsubsection{Discussion}
 \begin{enumerate}
+\item What is the purpose of partial differential on Newton's update?
 \item What is the definition of Maximum a posteriori estimation(MAP)?
 \item What is the Bayes decision boundary when $K=2$ ? What is the Bayes decision boundary when $K>2$ ?
 \item What is Fisher linear discriminant function ?
