@@ -32,6 +32,7 @@
 \usepackage{appendix}
 \usepackage{adjustbox}
 \usepackage{pdfpages}
+\usepackage{blkarray} %For adding Matrix label on row and column
 
 \def\se{{\rm se}}
 %\newcommand{\red}{\color{red}}
@@ -383,7 +384,8 @@ In order to simplify \eqref{MAP}, we take the log of \eqref{MAP}
 
 \begin{align}
 \begin{split}
-\arg\max_{k}  \delta_{k}(x) &= \arg\max_{k} \bigg( \log \pi_{k} + x \frac{\mu_{k}}{\sigma^{2}}-\frac{\mu_{k}^{2}}{2\sigma^{2}}+ \underline{\log \frac{1}{\sqrt{2\pi}\sigma}-\frac{x^{2}}{2\sigma^{2}}} \bigg)\\
+\arg\max_{k}  \delta_{k}(x) &= \log \big(\pi_{k}f_{k}(x)\big) \\
+							&= \arg\max_{k} \bigg( \log \pi_{k} + x \frac{\mu_{k}}{\sigma^{2}}-\frac{\mu_{k}^{2}}{2\sigma^{2}}+ \underline{\log \frac{1}{\sqrt{2\pi}\sigma}-\frac{x^{2}}{2\sigma^{2}}} \bigg)\\
  						    &= \arg\max_{k} \bigg( \log \pi_{k} + x \frac{\mu_{k}}{\sigma^{2}}-\frac{\mu_{k}^{2}}{2\sigma^{2}}+ \text{\sout{constant}} \bigg)
 \end{split}
 \end{align}
@@ -405,7 +407,58 @@ The reason linear in the name of LDA, is because the discriminant functions are 
 
 \subsubsection{\textbf{Linear Discriminant Analysis for $p > 1$}}
 Assume that $X = \big( X_{1}~~X_{1}~~\dots~~X_{p} \big)$ drown from a multivariate Gaussian distribution, with a class-specific mean vector and a common covariance matrix.
-To indicate that a $p$-dimensional random variable $X$ has a multivariate Gaussian Distribution, we write $X \sim N(\mu,\sum)$
+To indicate that a $p$-dimensional random variable $X$ has a multivariate Gaussian Distribution, we write 
+
+\begin{gather*}
+X \sim N(\mu,\boldsymbol{\Sigma}) \\
+E(X) = \sum\limits_{i=1}^{p} X_{i}/p = \mu \\
+Cov(X) = \boldsymbol{\Sigma}
+\end{gather*}
+$Cov(X)$ is the $p \times p$ covariance matrix of $X$. The multivariate Gaussian Distribution density is defined as
+\begin{gather*}
+f(x) = \frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}} e^{-\frac{1}{2}(x-\mu)^{T}\boldsymbol{\Sigma}^{-1}(x-\mu)}
+\end{gather*}
+Using the same method as describe for $p=1$, we get the $p > 1 $ version 
+\begin{align*}
+\arg\max_{k}  \delta_{k}(x) &= \log \big(\pi_{k}f_{k}(x)\big) \\
+							&= \arg\max_{k} \bigg( \log \pi_{k} + \log \big(\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}\big)-\frac{1}{2}(x-\mu_{k})^{T}\boldsymbol{\Sigma}^{-1}(x-\mu_{k}) \bigg)\\
+ 						    &= \arg\max_{k} \bigg( \log \pi_{k} + x^{T}\boldsymbol{\Sigma}^{-1}\mu_{k}-\frac{1}{2}\mu_{k}^{T}\boldsymbol{\Sigma}^{-1}\mu_{k} + \text{\sout{constant}} \bigg) \\
+ 						    &= \arg\max_{k} \bigg( \log \pi_{k} + x^{T}\boldsymbol{\Sigma}^{-1}\mu_{k}-\frac{1}{2}\mu_{k}^{T}\boldsymbol{\Sigma}^{-1}\mu_{k} \bigg)
+\end{align*}
+
+\begin{framed}
+Example: \\
+Two predictors with 7 observations and $k=2$:
+
+\begin{multicols}{3}
+\[x^{T} = 
+\begin{blockarray}{ccc}
+   & X_{1} & X_{2}  \\
+\begin{block}{c(cc)}
+  x_{1} & 2.95 & 6.63  \\
+  x_{2} & 2.53 & 7.79  \\
+  x_{3} & 3.57 & 5.65  \\
+  x_{4} & 3.16 & 5.47  \\
+  x_{5} & 2.58 & 4.46  \\
+  x_{6} & 2.16 & 6.22  \\
+  x_{7} & 3.27 & 3.52  \\
+\end{block}
+\end{blockarray}\]
+\columnbreak
+\[y =  \left[
+\begin{array}{c}
+1 \\
+1 \\
+1 \\
+1 \\
+2 \\
+2 \\
+2 
+\end{array} \right]\]
+\columnbreak
+
+\end{multicols}
+\end{framed}
 
 
 \subsubsection{Discussion}
