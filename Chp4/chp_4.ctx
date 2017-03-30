@@ -398,7 +398,7 @@ In practice we don't know the parameters of the Gaussian distributions(unknown $
 \begin{itemize}
 \item $\hat{\pi}_{k} = n_{k}/n$
 \item $\hat{\mu}_{k}=\sum\limits_{i:y_{i}=k}x_{i}/n_{k}$
-\item $\hat{\sigma}^{2} = \sum\limits_{k=1}^{K} (n_{k}-1)S_{k}/(n-k)$
+\item $\hat{\sigma}^{2} = \sum\limits_{k=1}^{K} (n_{k}-1)S_{k}/(n-k)$ (pooled variance, homoscedasticity property)
 \item $S_{k} = \sum\limits_{i:y_{i}=k}(x_{i}-\hat{\mu}_{k})^{2}/(n_{k}-1)$
 \end{itemize}
 
