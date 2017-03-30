@@ -1,4 +1,4 @@
-\documentclass[12pt,fleqn,a4paper]{article}%
+\documentclass[12pt,a4paper]{article}%
 \usepackage{makeidx}
 \makeindex
 \usepackage{bm}
@@ -33,6 +33,7 @@
 \usepackage{adjustbox}
 \usepackage{pdfpages}
 \usepackage{blkarray} %For adding Matrix label on row and column
+
 
 \def\se{{\rm se}}
 %\newcommand{\red}{\color{red}}
@@ -104,11 +105,13 @@
 \newtheorem{lma}{\textbf{Lemma}}
 
 % ======================== Set length ========================
-\setlength{\columnsep}{2.4cm}
+\setlength{\columnsep}{1cm}
 \setlength\parindent{0pt}
-\textheight=22cm
-\textwidth=16.5cm
+\textheight = 22cm
+\textwidth = 16.5cm
 \hoffset=-1cm
+\footskip=40pt
+\renewcommand*{\arraystretch}{0.8}
 % ============================================================
 
 
@@ -384,9 +387,9 @@ In order to simplify \eqref{MAP}, we take the log of \eqref{MAP}
 
 \begin{align}
 \begin{split}
-\arg\max_{k}  \delta_{k}(x) &= \log \big(\pi_{k}f_{k}(x)\big) \\
+\arg\max_{k}  \delta_{k}(x) &= \arg\max_{k} \bigg( \log \big(\pi_{k}f_{k}(x)\big)\bigg) \\
 							&= \arg\max_{k} \bigg( \log \pi_{k} + x \frac{\mu_{k}}{\sigma^{2}}-\frac{\mu_{k}^{2}}{2\sigma^{2}}+ \underline{\log \frac{1}{\sqrt{2\pi}\sigma}-\frac{x^{2}}{2\sigma^{2}}} \bigg)\\
- 						    &= \arg\max_{k} \bigg( \log \pi_{k} + x \frac{\mu_{k}}{\sigma^{2}}-\frac{\mu_{k}^{2}}{2\sigma^{2}}+ \text{\sout{constant}} \bigg)
+ 						    &= \arg\max_{k} \bigg( \log \pi_{k} + x \frac{\mu_{k}}{\sigma^{2}}-\frac{\mu_{k}^{2}}{2\sigma^{2}}+ \text{\sout{fixed constant}} \bigg)
 \end{split}
 \end{align}
 
@@ -395,7 +398,8 @@ In practice we don't know the parameters of the Gaussian distributions(unknown $
 \begin{itemize}
 \item $\hat{\pi}_{k} = n_{k}/n$
 \item $\hat{\mu}_{k}=\sum\limits_{i:y_{i}=k}x_{i}/n_{k}$
-\item $\hat{\sigma}^{2} = \sum\limits_{k=1}^{K}\sum\limits_{i:y_{i}=k}(x_{i}-\hat{\mu}_{k})^{2}/(n-k)$
+\item $\hat{\sigma}^{2} = \sum\limits_{k=1}^{K} (n_{k}-1)S_{k}/(n-k)$
+\item $S_{k} = \sum\limits_{i:y_{i}=k}(x_{i}-\hat{\mu}_{k})^{2}/(n_{k}-1)$
 \end{itemize}
 
 The discriminant function,
@@ -414,51 +418,134 @@ X \sim N(\mu,\boldsymbol{\Sigma}) \\
 E(X) = \sum\limits_{i=1}^{p} X_{i}/p = \mu \\
 Cov(X) = \boldsymbol{\Sigma}
 \end{gather*}
-$Cov(X)$ is the $p \times p$ covariance matrix of $X$. The multivariate Gaussian Distribution density is defined as
+$\boldsymbol{\Sigma}$ is the $p \times p$ covariance matrix of $X$. The multivariate Gaussian Distribution density is defined as
 \begin{gather*}
 f(x) = \frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}} e^{-\frac{1}{2}(x-\mu)^{T}\boldsymbol{\Sigma}^{-1}(x-\mu)}
 \end{gather*}
-Using the same method as describe for $p=1$, we get the $p > 1 $ version 
+Using the same method as describe for $p=1$, we get the optimization function for $p > 1 $ version 
 \begin{align*}
 \arg\max_{k}  \delta_{k}(x) &= \log \big(\pi_{k}f_{k}(x)\big) \\
 							&= \arg\max_{k} \bigg( \log \pi_{k} + \log \big(\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}\big)-\frac{1}{2}(x-\mu_{k})^{T}\boldsymbol{\Sigma}^{-1}(x-\mu_{k}) \bigg)\\
  						    &= \arg\max_{k} \bigg( \log \pi_{k} + x^{T}\boldsymbol{\Sigma}^{-1}\mu_{k}-\frac{1}{2}\mu_{k}^{T}\boldsymbol{\Sigma}^{-1}\mu_{k} + \text{\sout{constant}} \bigg) \\
  						    &= \arg\max_{k} \bigg( \log \pi_{k} + x^{T}\boldsymbol{\Sigma}^{-1}\mu_{k}-\frac{1}{2}\mu_{k}^{T}\boldsymbol{\Sigma}^{-1}\mu_{k} \bigg)
 \end{align*}
+The parameters ($\hat{\pi}_{k}, \hat{\mu}_{k}$) are estimated as before except $\boldsymbol{\Sigma}$.
+Let $S_{k}$ denote the $p \times p$ covariance matrix for class $k$. 
+Then the sample covariance matrix $\boldsymbol{\Sigma}$ can be estimated by substituting in the pooled covariance matrix $S$ :
+\begin{gather*}
+S = \frac{\sum\limits_{k=1}^{K} (n_{k}-1)S_{k}}{n-K}
+\end{gather*}
+The discriminant function for $p>1$
+\begin{gather*}
+\arg\max_{k}  \hat{\delta_{k}}(x) = \arg\max_{k} \bigg( \log \hat{\pi}_{k} + x^{T} S^{-1} \hat{\mu}_{k} - \frac{1}{2} \hat{\mu}_{k}^{T} S^{-1} \hat{\mu}_{k} \bigg)
+\end{gather*}
 
-\begin{framed}
+\begin{oframed}
 Example: \\
-Two predictors with 7 observations and $k=2$:
-
-\begin{multicols}{3}
-\[x^{T} = 
-\begin{blockarray}{ccc}
-   & X_{1} & X_{2}  \\
-\begin{block}{c(cc)}
-  x_{1} & 2.95 & 6.63  \\
-  x_{2} & 2.53 & 7.79  \\
-  x_{3} & 3.57 & 5.65  \\
-  x_{4} & 3.16 & 5.47  \\
-  x_{5} & 2.58 & 4.46  \\
-  x_{6} & 2.16 & 6.22  \\
-  x_{7} & 3.27 & 3.52  \\
+Two predictors with 11 observations and $k=2$:
+\begin{equation*}
+[x^{T},y] = 
+\begin{blockarray}{cccc}
+   & X_{1} & X_{2} & y  \\
+\begin{block}{c(cc|c)}
+  x_{1} & 1 & 2 & 1 \\
+  x_{2} & 2 & 3 & 1 \\
+  x_{3} & 3 & 3 & 1 \\
+  x_{4} & 4 & 5 & 1 \\
+  x_{5} & 5 & 5 & 1 \\
+  x_{6} & 1 & 0 & 2 \\
+  x_{7} & 2 & 1 & 2 \\
+  x_{8} & 3 & 1 & 2 \\
+  x_{9} & 3 & 2 & 2 \\
+  x_{10} & 5 & 3 & 2 \\
+  x_{11} & 6 & 5 & 2 \\
 \end{block}
-\end{blockarray}\]
-\columnbreak
-\[y =  \left[
-\begin{array}{c}
-1 \\
-1 \\
-1 \\
-1 \\
-2 \\
-2 \\
-2 
-\end{array} \right]\]
+\end{blockarray}
+\end{equation*}
+
+\begin{multicols}{2}
+\begin{equation*}
+c_{1} = \begin{blockarray}{cccc}
+   & X_{1} & X_{2} & y  \\
+\begin{block}{c(cc|c)}
+  x_{1} & 1 & 2 & 1 \\
+  x_{2} & 2 & 3 & 1 \\
+  x_{3} & 3 & 3 & 1 \\
+  x_{4} & 4 & 5 & 1 \\
+  x_{5} & 5 & 5 & 1 \\
+\end{block}
+\end{blockarray}
+\end{equation*}
+\begin{equation*}
+c_{2} = \begin{blockarray}{cccc}
+   & X_{1} & X_{2} & y  \\
+\begin{block}{c(cc|c)}
+  x_{6} & 1 & 0 & 2 \\
+  x_{7} & 2 & 1 & 2 \\
+  x_{8} & 3 & 1 & 2 \\
+  x_{9} & 3 & 2 & 2 \\
+  x_{10} & 5 & 3 & 2 \\
+  x_{11} & 6 & 5 & 2 \\
+\end{block}
+\end{blockarray}
+\end{equation*}
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{equation*}
+\mu_{1} = \left[ \begin{array}{cc}
+3 & 3.6
+\end{array} \right]
+\end{equation*}
+
 \columnbreak
 
+\vspace{-10pt}
+
+\begin{equation*}
+\mu_{2} = \left[ \begin{array}{cc}
+3.3 & 2
+\end{array} \right]
+\end{equation*}
 \end{multicols}
-\end{framed}
+
+\begin{multicols}{2}
+\begin{equation*}
+S_{1} = \left[ \begin{array}{cc}
+ \sigma^{k=1}_{11}=2.5 &  \sigma^{k=1}_{12}=2 \\
+ \sigma^{k=1}_{21}=2 &  \sigma^{k=1}_{22}=1.8
+\end{array} \right]
+\end{equation*}
+
+\columnbreak
+
+\begin{equation*}
+S_{2} = \left[ \begin{array}{cc}
+ \sigma^{k=2}_{11}=3.47 &  \sigma^{k=2}_{12}=3.2 \\
+ \sigma^{k=2}_{21}=3.2 &  \sigma^{k=2}_{22}=3.2
+\end{array} \right]
+\end{equation*}
+\end{multicols}
+
+\begin{equation*}
+S = \frac{(n_{1}-1)S_{1} + (n_{2}-1)S_{2}}{n-K} = \frac{
+\left[ \begin{array}{cc}
+ 10 &  8 \\
+ 8 &  7.2
+\end{array} \right] + \left[\begin{array}{cc}
+ 17.3 & 16 \\
+ 16  & 16
+\end{array} \right]}{11-2} = 
+\frac{
+\left[\begin{array}{cc}
+ 27.3 & 24 \\
+ 24  & 23.2
+\end{array} \right]}{11-2}
+\end{equation*}
+
+\end{oframed}
+
+
 
 
 \subsubsection{Discussion}
