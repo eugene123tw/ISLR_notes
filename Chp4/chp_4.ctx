@@ -581,6 +581,11 @@ S = \frac{(n_{1}-1)S_{1} + (n_{2}-1)S_{2}}{n-K} = \frac{
 \end{array} \right]}{11-2}
 \end{equation*}
 
+\begin{equation*}
+\hat{\pi}_{1} = \frac{5}{11} ~~~~~~~~~~~~~~~~ \hat{\pi}_{2} = \frac{6}{11}
+\end{equation*}
+
+
 \end{oframed}
 
 \begin{framed}
