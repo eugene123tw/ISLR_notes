@@ -325,7 +325,8 @@ Notations:
 \begin{itemize}
 \item $Y$: The qualitative response variable with $K$ different categories, $R_{Y} = {1,\dots,K}$
 \item $\pi_{k}$: The prior probability that a randomly chosen observation comes from the $k$th class
-\item $f_{k}(X)$: the density function of $X$ for an observation comes form the $k$th class
+\item $f_{k}(X)$: The density function of $X$ for an observation comes form the $k$th class
+\item $h^{*}(x)$: Indicate the class which the training data $x$ belongs to
 \end{itemize}
 
 \begin{framed}
@@ -353,6 +354,43 @@ P(B) = \sum\limits_{i=1}^{n}P(B|A_{i})P(A_{i})
 
 \end{definition}
 \end{framed}
+
+\begin{framed}
+\begin{definition}[Bayes' Theorem]
+~\\
+設 $A_{1},A_{2},\dots,A_{n}$ 為樣本空間$S$中之一組分割, $\mathbf{B}$是樣本空間$\mathbf{S}$上之任意事件, 則
+\begin{gather*}
+P(A_{k}|B) = \frac{P(B|A_{k})P(A_{k})}{\sum\limits_{i=1}^{n}P(B|A_{i})P(A_{i})}
+\end{gather*}
+
+\end{definition}
+\end{framed}
+In below we define the Bayes Classifier for two class $y=\{0,1\}$. Let 
+\begin{equation}
+r(x) = P(Y=1|X=x)
+\end{equation}
+denote the regression function. From Bayes' Theorem we have
+\begin{align*}
+r(x) &= \frac{P(X=x|Y=1)P(Y=1)}{P(X=x|Y=0)P(Y=0)+P(X=x|Y=1)P(Y=1)} \\
+	 &= \frac{f_{1}(x)\pi}{f_{1}(x)\pi + f_{0}(x)(1-\pi)}
+\end{align*}
+
+\begin{framed}
+\begin{definition}[The Bayes Classification rule $h^{*}(x)$]
+~\\
+\begin{gather*}
+h^{*}(x) = \left\{
+  \begin{array}{ll}
+    1 & \mbox{\rm if } r(x)> \frac{1}{2}\\
+    0 & \mbox{\rm otherwise.} \\
+   \end{array} \right.
+\end{gather*}
+
+The set $\{x : P(Y=1|X=x) = P(Y=0|X=x) \}$ is called the decision boundary.
+
+\end{definition}
+\end{framed}
+
 
 \subsubsection{\textbf{Linear Discriminant Analysis for p=1}}
 In the assumption of the Linear Discriminant Analysis, we assume the independent variable $X$ follow Gaussian distribution.
@@ -424,9 +462,9 @@ f(x) = \frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}} e^{-\frac{1}{2}(x-\mu)
 \end{gather*}
 Using the same method as describe for $p=1$, we get the optimization function for $p > 1 $ version 
 \begin{align*}
-\arg\max_{k}  \delta_{k}(x) &= \log \big(\pi_{k}f_{k}(x)\big) \\
+\arg\max_{k}  \delta_{k}(x) &= \arg\max_{k} \bigg( \log \big(\pi_{k}f_{k}(x)\big) \bigg)\\
 							&= \arg\max_{k} \bigg( \log \pi_{k} + \log \big(\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}\big)-\frac{1}{2}(x-\mu_{k})^{T}\boldsymbol{\Sigma}^{-1}(x-\mu_{k}) \bigg)\\
- 						    &= \arg\max_{k} \bigg( \log \pi_{k} + x^{T}\boldsymbol{\Sigma}^{-1}\mu_{k}-\frac{1}{2}\mu_{k}^{T}\boldsymbol{\Sigma}^{-1}\mu_{k} + \text{\sout{constant}} \bigg) \\
+ 						    &= \arg\max_{k} \bigg( \log \pi_{k} + x^{T}\boldsymbol{\Sigma}^{-1}\mu_{k}-\frac{1}{2}\mu_{k}^{T}\boldsymbol{\Sigma}^{-1}\mu_{k} + \text{\sout{fixed constant}} \bigg) \\
  						    &= \arg\max_{k} \bigg( \log \pi_{k} + x^{T}\boldsymbol{\Sigma}^{-1}\mu_{k}-\frac{1}{2}\mu_{k}^{T}\boldsymbol{\Sigma}^{-1}\mu_{k} \bigg)
 \end{align*}
 The parameters ($\hat{\pi}_{k}, \hat{\mu}_{k}$) are estimated as before except $\boldsymbol{\Sigma}$.
@@ -465,7 +503,7 @@ Two predictors with 11 observations and $k=2$:
 
 \begin{multicols}{2}
 \begin{equation*}
-c_{1} = \begin{blockarray}{cccc}
+x^{k=1} = \begin{blockarray}{cccc}
    & X_{1} & X_{2} & y  \\
 \begin{block}{c(cc|c)}
   x_{1} & 1 & 2 & 1 \\
@@ -477,7 +515,7 @@ c_{1} = \begin{blockarray}{cccc}
 \end{blockarray}
 \end{equation*}
 \begin{equation*}
-c_{2} = \begin{blockarray}{cccc}
+x^{k=2} = \begin{blockarray}{cccc}
    & X_{1} & X_{2} & y  \\
 \begin{block}{c(cc|c)}
   x_{6} & 1 & 0 & 2 \\
@@ -493,7 +531,7 @@ c_{2} = \begin{blockarray}{cccc}
 
 \begin{multicols}{2}
 \begin{equation*}
-\mu_{1} = \left[ \begin{array}{cc}
+\hat{\mu}_{1} = \left[ \begin{array}{cc}
 3 & 3.6
 \end{array} \right]
 \end{equation*}
@@ -503,7 +541,7 @@ c_{2} = \begin{blockarray}{cccc}
 \vspace{-10pt}
 
 \begin{equation*}
-\mu_{2} = \left[ \begin{array}{cc}
+\hat{\mu}_{2} = \left[ \begin{array}{cc}
 3.3 & 2
 \end{array} \right]
 \end{equation*}
@@ -512,8 +550,8 @@ c_{2} = \begin{blockarray}{cccc}
 \begin{multicols}{2}
 \begin{equation*}
 S_{1} = \left[ \begin{array}{cc}
- \sigma^{k=1}_{11}=2.5 &  \sigma^{k=1}_{12}=2 \\
- \sigma^{k=1}_{21}=2 &  \sigma^{k=1}_{22}=1.8
+ \sigma_{11}=2.5 & \sigma_{12}=2 \\
+ \sigma_{21}=2   & \sigma_{22}=1.8
 \end{array} \right]
 \end{equation*}
 
@@ -521,8 +559,8 @@ S_{1} = \left[ \begin{array}{cc}
 
 \begin{equation*}
 S_{2} = \left[ \begin{array}{cc}
- \sigma^{k=2}_{11}=3.47 &  \sigma^{k=2}_{12}=3.2 \\
- \sigma^{k=2}_{21}=3.2 &  \sigma^{k=2}_{22}=3.2
+ \sigma_{11}=3.47 &  \sigma_{12}=3.2 \\
+ \sigma_{21}=3.2 &  \sigma_{22}=3.2
 \end{array} \right]
 \end{equation*}
 \end{multicols}
@@ -545,8 +583,63 @@ S = \frac{(n_{1}-1)S_{1} + (n_{2}-1)S_{2}}{n-K} = \frac{
 
 \end{oframed}
 
+\begin{framed}
+\begin{definition}[The Bayes Classification rule for LDA]
+~\\
+If $X|Y=0 \sim N(\mu_{0}, \boldsymbol{\Sigma})$ and $X|Y=1 \sim N(\mu_{1}, \boldsymbol{\Sigma})$, then the Bayes rule is 
+\begin{gather*}
+h^{*}(x) = \left\{
+  \begin{array}{ll}
+    1 & \mbox{\rm if } x^{T} \boldsymbol{\Sigma}^{-1} (\mu_{1}-\mu_{0}) > \frac{1}{2}(\mu_{1}+\mu_{0})^{T} \boldsymbol{\Sigma}^{-1} (\mu_{1}-\mu_{0})- \log \frac{\pi_{1}}{\pi_{0}} \\
+    0 & \mbox{\rm otherwise.} \\
+   \end{array} \right.
+\end{gather*}
+\end{definition}
+\end{framed}
+
+The decision boundary takes the form 
+\begin{gather*}
+\frac{\delta_{1}(x)}{\delta_{0}(x)} = \frac{\log \pi_{1} + x^{T}\boldsymbol{\Sigma}^{-1}\mu_{1}-\frac{1}{2}\mu_{1}^{T}\boldsymbol{\Sigma}^{-1}\mu_{1}}{\log \pi_{0} + x^{T}\boldsymbol{\Sigma}^{-1}\mu_{0}-\frac{1}{2}\mu_{0}^{T}\boldsymbol{\Sigma}^{-1}\mu_{0}} > 1 \\
+x^{T} \boldsymbol{\Sigma}^{-1} (\mu_{1}-\mu_{0}) > \frac{1}{2} (\mu_{1} + \mu_{0})^{T} \boldsymbol{\Sigma}^{-1} (\mu_{1} - \mu_{0}) - \log \frac{\pi_{1}}{\pi_{0}} 
+\end{gather*}
+
+\subsubsection{\textbf{Quadratic Discriminant Analysis}}
+Linear Discriminant Analysis assumes that the observations within each class are drawn from a multivariate Gaussian Distribution.
+Each class has a specific mean vector ($\mu_{k}$) and a common covariance matrix ($\boldsymbol{\Sigma}$).
+Unlike LDA, Quadratic Discriminant Analysis assumes that each class has its own covariance matrix ($\boldsymbol{\Sigma}_{k}$).
+It assumes that an observation from $k$th class is of the form $X \sim N(\mu_{k}, \boldsymbol{\Sigma}_{k})$. 
+Under this assumption, the optimization function for Bayes classifier takes the form
+\begin{align*}
+\arg\max_{k}  \delta_{k}(x) &= \arg\max_{k} \bigg( -\frac{1}{2} \log |\boldsymbol{\Sigma}_{k}|-\frac{1}{2}(x-\mu_{k})^{T} \boldsymbol{\Sigma}_{k}^{-1} (x-\mu_{k})+ \log \pi_{k}   \bigg)
+\end{align*}
 
 
+\begin{framed}
+\begin{definition}[The Bayes Classification rule for QDA]
+~\\
+If $X|Y=0 \sim N(\mu_{0}, \boldsymbol{\Sigma}_{0})$ and $X|Y=1 \sim N(\mu_{1}, \boldsymbol{\Sigma}_{1})$, then the Bayes rule is 
+\begin{gather*}
+h^{*}(x) = \left\{
+  \begin{array}{ll}
+    1 & \mbox{\rm if } r^{2}_{1} < r^{2}_{0} + 2 \log(\frac{\pi_{1}}{\pi_{0}}) + \log \big( \frac{|\boldsymbol{\Sigma_{0}}|}{|\boldsymbol{\Sigma_{1}}|} \big) \\
+    0 & \mbox{\rm otherwise.} \\
+   \end{array} \right.
+\end{gather*}
+where
+\begin{gather*}
+r^{2}_{i} = (x-\mu_{i})^{T}\Sigma_{i}^{-1}(x-\mu_{i}), i=0,1 \\
+\end{gather*}
+\end{definition}
+\end{framed}
+
+The upper Bayes rule is generated from the decision boundary between any of the two classes.
+The decision boundary takes the form 
+\begin{gather*}
+\frac{\delta_{k}(x)}{\delta_{l}(x)} = \frac{-\frac{1}{2}\log |\boldsymbol{\Sigma}_{k}| - \frac{1}{2}(x-\mu_{k})^{T} \boldsymbol{\Sigma}_{k}^{-1} (x-\mu_{k}) + \log \pi_{k}}{-\frac{1}{2}\log |\boldsymbol{\Sigma}_{l}| - \frac{1}{2}(x-\mu_{l})^{T} \boldsymbol{\Sigma}_{l}^{-1} (x-\mu_{l}) + \log \pi_{l}} > 1 \\
+\log |\boldsymbol{\Sigma}_{k}| - (x-\mu_{k})^{T} \boldsymbol{\Sigma}_{k}^{-1} (x-\mu_{k}) + 2 \log \pi_{k} > \log |\boldsymbol{\Sigma}_{l}| - (x-\mu_{l})^{T} \boldsymbol{\Sigma}_{l}^{-1} (x-\mu_{l}) + 2 \log \pi_{l} \\
+\log |\boldsymbol{\Sigma}_{k}| - r_{k}^{2} + 2 \log \pi_{k} > \log |\boldsymbol{\Sigma}_{l}| - r_{l}^{2} + 2 \log \pi_{l} \\
+r_{l}^{2} + 2 \log \frac{\pi_{k}}{\pi_{l}} + \log \frac{|\boldsymbol{\Sigma}_{k}|}{|\boldsymbol{\Sigma}_{l}|} > r_{k}^{2}
+\end{gather*}
 
 \subsubsection{Discussion}
 \begin{enumerate}
