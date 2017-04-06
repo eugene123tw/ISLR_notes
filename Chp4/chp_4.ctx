@@ -33,7 +33,7 @@
 \usepackage{adjustbox}
 \usepackage{pdfpages}
 \usepackage{blkarray} %For adding Matrix label on row and column
-
+\usepackage{url}
 
 \def\se{{\rm se}}
 %\newcommand{\red}{\color{red}}
@@ -337,10 +337,11 @@ f_{k}(X) = Pr(X=x|Y=k)
 \end{gather*}
 \end{framed}
 From the law of total probability, the above notations can be stated as below:
-\begin{gather}
-Pr(Y=k|X=x) = \frac{\pi_{k}f_{k}(x)}{\sum\limits_{\ell=1}^{K}\pi_{\ell}f_{\ell}(x)}
+\begin{align*}
+Pr(Y=k|X=x) &= \frac{P(X=x|Y=k)P(Y=k)}{\sum\limits_{\ell=1}^{K} P(X=x|Y=l)P(Y=l)} \\
+  	        &= \frac{\pi_{k}f_{k}(x)}{\sum\limits_{\ell=1}^{K}\pi_{\ell}f_{\ell}(x)}
 \label{lda}
-\end{gather}
+\end{align*}
 The abbreviation for $Pr(Y=k|X=x)$ will be denoted as $p_{k}(X)$ which is the posterior probability that an observation $X=x$ belongs to the $k$th class.
 In the following section, we have to make assumptions and approximates $f_{k}(X)$ to build a classifier that approximates the Bayes classifier.
 
@@ -646,11 +647,260 @@ The decision boundary takes the form
 r_{l}^{2} + 2 \log \frac{\pi_{k}}{\pi_{l}} + \log \frac{|\boldsymbol{\Sigma}_{k}|}{|\boldsymbol{\Sigma}_{l}|} > r_{k}^{2}
 \end{gather*}
 
-\subsubsection{Discussion}
+\subsection{\textbf{A Comparison of Classification Methods}}
+
+\begin{table}[H]
+\begin{tabular}{p{0.11\linewidth} | p{0.14\linewidth} l l p{0.14\linewidth}}
+ & Logistic & Linear Discriminant & Quadratic Discriminant & KNN \\
+\hline 
+Model Assumption  & No special assumption & $X|Y=k \sim N(\mu_k, \boldsymbol{\Sigma})$ & $X|Y=k \sim N(\mu_k, \boldsymbol{\Sigma}_{k})$ & No special assumption \\
+\hline
+Predicator Variable & Continuous and Discrete & Continuous & Continuous & Continuous or Discrete \\
+\hline
+Response Variable & \multicolumn{4}{c}{Discrete} \\
+\hline
+Linear data prediction  & Good & Good & Bad & Bad \\
+\hline
+Non-linear data prediction  & Bad & Bad & Good & Good \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Exercises}
+%====================================================================================================================================
+% 1.====================================================================================================================================
+\begin{enumerate}
+\item[1.] Using a little bit of algebra, prove that (4.2) is equivalent to (4.3). 
+In other words, the logistic function representation and logit representation for the logistic regression model are equivalent.
+\end{enumerate}
+
+\begin{oframed}
+Answer:
+\begin{gather*}
+p(x) = \frac{e^{\beta^{T}x}}{1+e^{\beta^{T}x}} \\
+1-p(x) = \frac{1}{1+e^{\beta^{T}x}} \\
+\frac{p(x)}{1-p(x)} = e^{\beta^{T}x}
+\end{gather*}
+\end{oframed}
+%====================================================================================================================================
+% 2.====================================================================================================================================
+\begin{enumerate}
+\item[2.] It was stated in the text that classifying an observation to the class for which (4.12) is largest is equivalent to classifying an observation to the class for which (4.13) is largest.
+Prove that this is the case. In other words, under the assumption that the observations in the $k$th class are drawn from a $N(\mu_{k},\sigma^{2})$ distribution, 
+the Bayes' classifier assigns an observation to the class for which the discriminant function is maximized.
+\end{enumerate}
+
+\begin{oframed}
+Answer: ~\\
+From the Bayes' Theorem we know (4.12), for any class $k$, the total probability $\sum\limits_{l=1}^{K} \pi_{l} f_{l}(x)$ for each class is the same.
+However, the prior probability $\pi_{k}$ and the probability $f_{k}(x)$ will differ depending on it's $k$. 
+So, the objective is to find the largest $\pi_{k}f_{k}(x)$ among the range of $(\pi_{1}f_{1}(x),\dots,\pi_{k}f_{k}(x), \dots,\pi_{K}f_{K}(x))$.
+With the logarithm transformation we get 
+\begin{gather*}
+\delta_{k}(x) = \log \big(\pi_{k}f_{k}(x)\big)
+\end{gather*}
+\end{oframed}
+%====================================================================================================================================
+% 3.====================================================================================================================================
+\begin{enumerate}
+\item[3.] This problem relates to the QDA model, in which the observations within each class are drawn from a normal distribution with a class specific mean vector and a class specific covariance matrix
+We consider the simple case where $p = 1$; i.e. there is only one feature.
+Suppose that we have $K$ classes, and that if an observation belongs to the $k$th class then $X$ comes from a one-dimensional normal distribution, $X \sim N(\mu_{k}, \sigma_{k}^{2})$.
+Recall that the density function for the one-dimensional normal distribution is given in (4.11).
+Prove that in this case, the Bayes' classifier is not linear. Argue that it is in fact quadratic.
+\end{enumerate}
+
+\begin{oframed}
+Answer: ~\\
+Since we have
+\begin{gather*}
+f_{k}(x) = \frac{1}{(2 \pi)^{1/2}\sigma_{k}} e^{-\frac{1}{2}(x-\mu_{k})^{T}\sigma_{k}^{-1}(x-\mu_{k})} \\
+\end{gather*}
+For $\delta_{k}(x)$,
+\begin{align*}
+\delta_{k}(x) &= \log \big( f_{k}(x)\pi_{k} \big) \\
+ &= -\log (2\pi)^{1/2} - \log \sigma_{k}-\frac{1}{2}(x-\mu_{k})^{T}{\sigma}_{k}^{-1}(x-\mu_{k}) + \log \pi_{k} \\
+ &= - \log \sigma_{k}-\frac{1}{2}(x-\mu_{k})^{T}\sigma_{k}^{-1}(x-\mu_{k}) + \log \pi_{k} + c \\
+ &= - \log \sigma_{k} + \log \pi_{k} -\frac{1}{2}\sigma_{k}^{-1}(x-\mu_{k})^{2}
+\end{align*}
+$c$ can be cancelled due to it is merely a constant for all $K$ functions. 
+The above formula will generate an quadratic term $x^{2}$.
+\end{oframed}
+%====================================================================================================================================
+% 4.====================================================================================================================================
+\begin{enumerate}
+\item[4.]  When the number of features p is large, there tends to be a deterioration in the performance of KNN and other local approaches that perform prediction using only observations that are near the test observation for which a prediction must be made. This phenomenon is known as the curse of dimensionality, and it ties into the fact that non-parametric approaches often perform poorly when p is large. We will now investigate this curse.
+
+\begin{enumerate}
+\item[(a)] Suppose that we have a set of observations, each with measurements on $p = 1$ feature, $X$. We assume that $X$ is uniformly (evenly) distributed on [0, 1]. 
+Associated with each observation is a response value. 
+Suppose that we wish to predict a test observations response using only observations that are within 10\% of the range of $X$ closest to that test observation. 
+For instance, in order to predict the response for a test observation with $X = 0.6$, we will use observations in the range [0.55, 0.65]. 
+On average, what fraction of the available observations will we use to make the prediction?
+
+\item[(b)] Now suppose that we have a set of observations, each with measurements on $p = 2$ features, $X_{1}$ and $X_{2}$ . We assume that
+$(X_{1} , X_{2})$ are uniformly distributed on $[0, 1] \times [0, 1]$. 
+We wish to predict a test observations response using only observations that are within 10\% of the range of $X_{1}$ and within 10\% of the range of $X_{2}$ closest to that test observation. 
+For instance, in order to predict the response for a test observation with $X_{1} = 0.6$ and
+$X_{2}=0.35$ , we will use observations in the range $[0.55, 0.65]$ for
+$X_{1}$ and in the range $[0.3, 0.4]$ for $X_{2}$ . On average, what fraction of the available observations will we use to make the prediction?
+
+\item[(c)] Now suppose that we have a set of observations on p = 100 features. 
+Again the observations are uniformly distributed on each feature, and again each feature ranges in value from 0 to 1. 
+We wish to predict a test observation's response using observations within the 10 \% of each feature's range that is closest to that test
+observation. What fraction of the available observations will we use to make the prediction?
+
+\item[(d)] Using your answers to parts (a)-(c), argue that a drawback of KNN when p is large is that there are very few training observations "near" any given test observation.
+
+\item[(e)] Now suppose that we wish to make a prediction for a test observation by creating a p-dimensional hypercube centred around the test observation that contains, on average, 10\% of the training observations. 
+For $p$ = 1, 2, and 100, what is the length of each side of the hypercube? Comment on your answer.
+
+\end{enumerate}
+\end{enumerate}
+
+
+\begin{oframed}
+Answer:
+\begin{enumerate}
+\item[(a)] $ X \sim U(0,1), \int_{x-0.05}^{x+0.05} 1 dx =0.1 $
+\item[(b)] 
+\begin{gather*}
+X_{1},X_{2} \stackrel{iid}{\sim} U(0,1) \\
+P(x_{1}-0.05<X_{1}<x_{1}+0.05) \times P(x_{2}-0.05<X_{2}<x_{2}+0.05) = 0.1^2
+\end{gather*}
+\item[(c)] $ X_{1},\dots,X_{100} \stackrel{iid}{\sim} U(0,1) = 0.1^{100}$
+\item[(d)] $$\lim_{p\to\infty} 0.1^{p} = 0 $$ From the proof above, we know when $p$ is large, the training data will hardly cover any of the observation we want to train on.
+That means, the observed data is not in the raw data, so if we plug this observation in the prediction model, the prediction results are certainly not what we expected.
+\end{enumerate}
+\end{oframed}
+%====================================================================================================================================
+% 5.====================================================================================================================================
+\begin{enumerate}
+\item[5.] We now examine the differences between LDA and QDA.
+\begin{enumerate}
+\item[(a)] If the Bayes decision boundary is linear, do we expect LDA or QDA to perform better on the training set? On the test set?
+\item[(b)] If the Bayes decision boundary is non-linear, do we expect LDA or QDA to perform better on the training set? On the test set?
+\item[(c)] In general, as the sample size $n$ increases, do we expect the test prediction accuracy of QDA relative to LDA to improve, decline, or be unchanged? Why?
+\item[(d)] True or False: Even if the Bayes decision boundary for a given problem is linear, we will probably achieve a superior test error rate using QDA rather than LDA because QDA is flexible enough to model a linear decision boundary. Justify your answer.
+\end{enumerate}
+\end{enumerate}
+
+\begin{oframed}
+Answer:
+\begin{enumerate}
+\item[(a)] When data is linear, QDA performs better than LDA in training set due to QDA has lower bias. However, LDA performs better than QDA in test set due to QDA has higher variance.
+\item[(b)] When data is non-linear, QDA performs better than LDA both on the training set and test set.
+\item[(c)] When sample size $n$ increases, the test prediction accuracy will improve since over-fitting issue of QDA will become minor. 
+\item[(d)] False. When the true data is linear, the test error rate will rise due to QDA is more likely to course over-fitting.
+\end{enumerate}
+\end{oframed}
+%====================================================================================================================================
+% 6.====================================================================================================================================
+\begin{enumerate}
+\item[6.] Suppose we collect data for a group of students in a statistics class with variables $X_{1}$ = hours studied, $X_{2}$ = undergrad GPA, and $Y$ = receive an A. 
+We fit a logistic regression and produce estimated coefficient, $\hat{\beta}_{0}= -6, \hat{\beta}_{1}=0.05, \hat{\beta}_{2}= 1$
+\begin{enumerate}
+\item[(a)] Estimate the probability that a student who studies for 40h and has an undergrad GPA of 3.5 gets an A in the class.
+\item[(b)] How many hours would the student in part (a) need to study to have a 50 \% chance of getting an A in the class?
+\end{enumerate}
+\end{enumerate}
+
+\begin{oframed}
+Answer:
+\begin{enumerate}
+\item[(a)] $$ f(x) = \frac{1}{1+e^{-\beta^{T}x}} = \frac{1}{1+e^{-(-6 + 0.05x_{1} + x_{2})}} = \frac{1}{1+e^{-(-6 + 0.05 \times 40 + 3.5)}}=0.3775 $$
+\item[(b)] $$ \frac{1}{1+e^{2.5 - 0.05 x_{1}}} = 0.5, x_{1} = 50 $$
+\end{enumerate}
+\end{oframed}
+%====================================================================================================================================
+% 7.====================================================================================================================================
+\begin{enumerate}
+\item[7.] Suppose that we wish to predict whether a given stock will issue a dividend this year ("Yes" or "No") based on X, last year's percent profit. 
+We examine a large number of companies and discover that the mean value of X for companies that issued a dividend was
+$\bar{X}= 10$ , while the mean for those that didn't was $\bar{X}= 0$. 
+In addition, the variance of X for these two sets of companies was $\bar{\sigma}^{2}= 36$.
+Finally, 80 \% of companies issued dividends. 
+Assuming that X follows a normal distribution, predict the probability that a company will issue a dividend this year given that its percentage profit was $X$ = 4 last year.
+\end{enumerate}
+
+\begin{oframed}
+Answer:~\\
+$$ \hat{\sigma}^2 = 36 $$
+\begin{minipage}{.5\linewidth}
+\begin{gather*}
+\hat{\mu}_{1} = 10 \\ 
+\hat{\pi}_{1} = 0.8
+\end{gather*}
+\begin{align*}
+\hat{f}_{1}(x=4) &= \frac{1}{\sqrt{2\pi}\hat{\sigma}} e^{-\frac{1}{2\hat{\sigma}^{2}}(x-\hat{\mu}_{1})^{2}} \\
+				 &= \frac{1}{\sqrt{2\pi} \times 6} e^{-\frac{1}{2 \times 36}(4-10)^{2}} \\
+				 &= 0.0403
+\end{align*}
+\end{minipage}%
+\begin{minipage}{.5\linewidth}
+\begin{gather*}
+\hat{\mu}_{0} = 0 \\ 
+\hat{\pi}_{0} = 0.2
+\end{gather*}
+\begin{align*}
+\hat{f}_{2}(x=4) &= \frac{1}{\sqrt{2\pi}\hat{\sigma}} e^{-\frac{1}{2\hat{\sigma}^{2}}(x-\hat{\mu}_{2})^{2}} \\
+				 &= \frac{1}{\sqrt{2\pi} \times 6} e^{-\frac{1}{2 \times 36}(4-0)^{2}} \\
+				 &= 0.0532
+\end{align*}
+\end{minipage}
+\begin{align*}
+\hat{P}(Y=1|X=4) &= \frac{\hat{f}_{1}(x)\hat{\pi}_{1}}{\hat{f}_{0}(x)\hat{\pi}_{0}+\hat{f}_{1}(x)\hat{\pi}_{1}} \\
+				 &= \frac{0.0403 \times 0.8}{0.0403 \times 0.8 + 0.0532 \times 0.2}
+				 &= 0.752
+\end{align*}
+\end{oframed}
+%====================================================================================================================================
+% 8.====================================================================================================================================
+\begin{enumerate}
+\item[8.] Suppose that we take a data set, divide it into equally-sized training and test sets, and then try out two different classification procedures.
+First we use logistic regression and get an error rate of 20 \% on the training data and 30 \% on the test data. 
+Next we use 1-nearest neighbours (i.e. K = 1) and get an average error rate 
+(averaged over both test and training data sets) of 18 \%. Based on these results, which method should we prefer to use for classification of new observations?
+Why?
+\end{enumerate}
+
+\begin{oframed}
+Answer:~\\
+For KNN if $K=1$, the model does not exist training error rate. Therefore the error rate for KNN(k=1) test sets equals to 36\% ($18\% \times 2 $).
+That means logistic regression with test error rate 30\% performs better than KNN.
+\end{oframed}
+
+%====================================================================================================================================
+% 9.====================================================================================================================================
+\begin{enumerate}
+\item[9.] This problem has to do with odds.
+\begin{enumerate}
+\item[(a)] On average, what fraction of people with an odds of 0.37 of defaulting on their credit card payment will in fact default?
+\item[(b)] Suppose that an individual has a 16\% chance of defaulting on her credit card payment. What are the odds that she will default?
+\end{enumerate}
+\end{enumerate}
+
+\begin{oframed}
+Answer:
+\begin{enumerate}
+\item[(a)] 
+\begin{gather*}
+\frac{p(x)}{1-p(x)} = 0.37 \\
+p(x) = 0.27
+\end{gather*}
+We have on average 27\% of people defaulting on their credit card payment.
+\item[(b)] 
+\begin{gather*}
+\frac{p(x)}{1-p(x)} = \frac{0.16}{1-0.16} = 0.19
+\end{gather*}
+The odds that she will default is then \(19\%\).
+\end{enumerate}
+\end{oframed}
+%====================================================================================================================================
+\subsection{Discussion}
 \begin{enumerate}
 \item What is the purpose of partial differential on Newton's update?
 \item What is the definition of Maximum a posteriori estimation(MAP)?
-\item What is the Bayes decision boundary when $K=2$ ? What is the Bayes decision boundary when $K>2$ ?
 \item What is Fisher linear discriminant function ?
 \end{enumerate}
 
@@ -661,6 +911,7 @@ r_{l}^{2} + 2 \log \frac{\pi_{k}}{\pi_{l}} + \log \frac{|\boldsymbol{\Sigma}_{k}
 \item Friedman, J., Hastie, T., \& Tibshirani, R. (2001). {\it{The elements of statistical learning}} (Vol. 1). Springer, Berlin: Springer series in statistics.
 \item James, G., Witten, D., Hastie, T., \& Tibshirani, R. (2013). {\it{An introduction to statistical learning}} (Vol. 6). New York: springer.
 \item Wasserman, L. (2013). {\it{All of statistics: a concise course in statistical inference}}. Springer Science \& Business Media.
+\item J Li, Linear Discriminant Analysis, \url{http://sites.stat.psu.edu/~jiali/course/stat597e/notes2/lda.pdf}
 \end{description}
 
 \end{document}
