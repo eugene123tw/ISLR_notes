@@ -1,0 +1,266 @@
+\documentclass[12pt,fleqn,a4paper]{article}%
+\usepackage{makeidx}
+\makeindex
+\usepackage{bm}
+\usepackage{framed} % Easier way to use Framebox
+\usepackage{pdfpages} % Import PDF in latex document
+\usepackage{fancybox}
+\usepackage{ulem} % for text strikethrough
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{slashbox}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{amsmath, amssymb, amsthm}  % For mathematical symbols
+\usepackage{rotating, booktabs}  % For table-rotating
+\usepackage{longtable,booktabs}
+\usepackage{wallpaper}  % For watermark
+\usepackage{colortbl,color}
+\usepackage{xcolor}
+\usepackage{graphicx,psfrag}
+\usepackage{tabularx,array}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage[subfigure]{tocloft}
+\usepackage[tight]{subfigure}
+\usepackage{float,booktabs,threeparttable}
+\usepackage{caption}
+\usepackage{menukeys}
+\usepackage{pst-tree}
+\usepackage{longtable}
+\usepackage{appendix}
+\usepackage{adjustbox}
+\usepackage{pdfpages}
+
+\def\se{{\rm se}}
+%\newcommand{\red}{\color{red}}
+\linespread{1.5}  % The linespread is 1.5.
+
+% Numbered theorems, definitions, algorithm and lemmas ======================================================================
+\newtheorem{thm}{Theorem}  % Define new theorem.
+\newtheorem{alg}{Algorithm}[section]  % Define new algorithm.
+\newtheorem{definition}{Definition}
+% ===========================================================================================================================
+
+% For writing psuedo code ======================================================================
+\usepackage{algorithm}% http://ctan.org/pkg/algorithms
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+% ===========================================================================================================================
+
+\theoremstyle{definition}
+\theoremstyle{plain}
+\setcounter{secnumdepth}{5}
+
+
+\renewcommand{\contentsname}{\ctxfbb Table of Contents}
+\renewcommand{\listfigurename}{\ctxfbb List of Figures}
+\renewcommand{\listtablename}{\ctxfbb List of Tables}
+\renewcommand{\figurename}{\footnotesize Figure}
+\renewcommand{\tablename}{\footnotesize Table}
+\newcommand{\loflabel}{Figure}
+\newcommand{\lotlabel}{Table}
+\setlength{\abovecaptionskip}{0pt}
+
+%\renewcommand{\cftsecpresnum}{Chapter }
+
+\renewcommand{\cftsecnumwidth}{7em}
+%\renewcommand{\thesection}{{\ctxfbb Chapter}~~ \arabic{section}}
+%\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+%\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+\renewcommand{\appendixpagename}{\Large\ctxfbb Appendix} % \ctxfb
+\renewcommand{\arraystretch}{1.2}
+
+\usepackage{appendix}
+
+\def\oo{\nolinebreak[4]\hspace{.3em}\raise.7ex\hbox{。}\hspace{0.3em}}
+\def\pp{\nolinebreak[4]\hspace{.3em}\raise.8ex\hbox{，}\hspace{0.3em}}
+\def\dd{\nolinebreak[4]\hspace{.3em}\raise.8ex\hbox{、}\hspace{0.3em}}
+\def\kk{\nolinebreak[4]\hspace{.3em}\raise.3ex\hbox{；}\hspace{0.3em}}
+\def\mm{\nolinebreak[4]\hspace{.3em}\raise.3ex\hbox{：}\hspace{0.3em}}
+\def\aa{\nolinebreak[4]\hspace{.3em}\raise.3ex\hbox{？}\hspace{0.3em}}
+
+%%%%%%%%%%
+
+%%%%%%%%%%
+\usepackage[refpage]{nomencl}
+\renewcommand{\nomname}{Notations}
+\renewcommand*{\pagedeclaration}[1]{\unskip\dotfill\hyperpage{#1}}
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+\makenomenclature
+\usepackage{makeidx}
+\makeindex
+%%%%%%%%%%%%
+%\let\clipbox\relax
+
+%%%%%%%%%%%%
+\ctxfdef{\section}{\ctxfbb}
+\ctxfdef{\subsection}{\ctxfbb} %\ctxfr
+
+\def\tb#1#2{\mathop{#1\vphantom{\sum}}\limits_{\displaystyle #2}}
+
+\newtheorem{lma}{\textbf{Lemma}}
+
+% ======================== Set length ========================
+\setlength{\columnsep}{2.4cm}
+\setlength\parindent{0pt}
+\textheight=22cm
+\textwidth=16.5cm
+\hoffset=-1cm
+% ============================================================
+
+
+% =============================
+% Equation numbering
+\numberwithin{equation}{section}
+% =============================
+
+\begin{document}
+\setcounter{section}{3}
+\section{Classifications}
+\subsection{\textbf{Logistic Regression}}
+\subsubsection{\textbf{Logistic Model}}
+
+logistic function:
+\begin{gather}
+p(X) = \frac{e^{\beta^{T}X}}{1+e^{\beta^{T}X}} = \frac{1}{1+e^{-\beta^{T}X}},~~ 0 \leq p(X) \leq 1, ~~ -\infty < X < \infty
+\label{logistic-model}
+\end{gather}
+
+The logistic function will always produce an S-shaped curve.
+\begin{figure}[H]
+\centering
+\psfrag{A}[c][l]{$X$}
+\psfrag{B}[c][l]{$p(X)$}
+\includegraphics[scale=1]{images//4_2.eps}
+\\~\\
+\caption{}\label{figure-4.2}
+\end{figure}
+
+With a bit of manipulation, we will get a odds function:
+\begin{gather}
+\frac{p(X)}{1-p(X)} = e^{\beta^{T}X},~~ 0< \frac{p(X)}{1-p(X)} < \infty
+\label{odds-function}
+\end{gather}
+
+The notation $p(X)$ can be interpreted as ${\rm Pr(Y=1|X)}$, which means the probability of $Y$ is True given $X$.
+The equation \eqref{odds-function} imply the ratio of success compare to fail. For example, average nine of ten people go to school.
+That means 9 times of people go to school compare to those who don't. So:
+\begin{gather*}
+p(x) = {\rm Pr(y=1|x)} = 9/10 \\
+\frac{p(x)}{1-p(x)} = \frac{9/10}{1-9/10} = 9
+\end{gather*}
+
+\subsubsection{\textbf{Estimating the Regression Coefficients}}
+To fit logistic model \eqref{logistic-model}, we use Maximum Likelihood to estimate the coefficients:
+\begin{framed}
+\begin{definition}[Likelihood Function]
+~\\
+$X_{1},X_{2},\dots,X_{n}$ 為一組樣本大小為$n$之隨機樣本, 記為$X_{1},X_{2},\dots,X_{n} \stackrel{i.i.d.}{\sim} f_{X_{i}}(x_{i};\theta)$, 定義母體參數 $\theta$ 之 likelihood function:
+\begin{gather*}
+L(\theta) = f_{X_{1},X_{2},\dots,X_{n}}(x_{1},x_{2},\dots,x_{n}) = \prod_{i=1}^{n}f_{X_{i}}(x_{i};\theta)
+\end{gather*}
+可解讀為在不同的母體參數值$\theta$之下, 抽到這組觀測的隨機樣本($X_{1},X_{2},\dots,X_{n}$)之可能性
+\end{definition}
+\end{framed}
+
+\textbf{\color{blue}{Maximum Likelihood Estimator, $\hat{\theta}_{\rm MLE}$}}:\\
+找一個 $\theta$ 使得拿到這組隨機樣本($X_{1},X_{2},\dots,X_{n}$)的可能性為最大, 亦即, 找一個 $\theta$ 使得概似函數 $L(\theta)$ 為最大:
+\begin{gather*}
+\text{arg}\,\max\limits_{\theta}\,L(\theta), \text{求解}\,\hat{\theta}_{\rm MLE}
+\end{gather*}
+
+Unlike linear regression, we can no longer write down the MLE in closed form. 
+Instead, we need to use an optimization algorithm to compute it. 
+For this, we need to derive the gradient and Hessian. The likelihood function of logistic model:
+
+\begin{gather}
+L(\beta) = \prod_{i=1}^{n} p(x_{i};\beta)^{y_{i}} (1-p(x_{i};\beta))^{1-y_{i}},~\text{where~} R_{y_{i}}=\{0,1\}
+\end{gather}
+
+The log-likelihood of logistic model:
+\begin{align*}
+\ell(\beta)& = \sum\limits_{i=1}^{n} y_{i} \log p(x_{i};\beta)+(1-y_{i})\log (1-p(x_{i};\beta)) \\
+		   & = \sum\limits_{i=1}^{n} y_{i} \log p(x_{i};\beta) + \log (1-p(x_{i};\beta)) - y_{i} \log (1-p(x_{i};\beta))\\
+		   & = \sum\limits_{i=1}^{n} y_{i} \log \frac{p(x_{i};\beta)}{1-p(x_{i};\beta)} + \log (1-p(x_{i};\beta))  \\
+		   & = \sum\limits_{i=1}^{n} y_{i}\beta^{T}x_{i}+ \log (\frac{1}{1+e^{\beta^{T}x_{i}}}) \\
+ 		   & = \sum\limits_{i=1}^{n} \{y_{i}\beta^{T}x_{i}-\log (1+e^{\beta^{T}x_{i}})\} 
+\end{align*}
+
+First order partial differential of the log-likelihood function (gradient descent):
+\begin{align*}
+\frac{\partial \ell(\beta)}{\partial \beta} & = \sum\limits_{i=1}^{n} x_{i}(y_{i} - \frac{e^{\beta^{T}x_{i}}}{1+e^{\beta^{T}x_{i}}}) \\
+ & = \sum\limits_{i=1}^{n} x_{i}(y_{i} - p(x_{i};\beta))
+\end{align*}
+
+Second order partial differential of the log-likelihood function (the s.o.c can transfer to a Hessian matrix):
+\begin{align*}
+\frac{\partial^{2} \ell(\beta)}{\partial \beta \partial \beta^{T}} 
+ & = \sum\limits_{i=1}^{n} x_{i}(-x_{i} \cdot \frac{e^{-\beta^{T} x_{i}}}{1+e^{-\beta^{T} x_{i}}} \cdot \frac{1}{1+e^{-\beta^{T} x_{i}}}) \\
+ & = -\sum\limits_{i=1}^{n} x_{i}x_{i}^{T} p(x_{i};\beta) (1-p(x_{i};\beta))
+\end{align*}
+
+Starting with $\beta^{old}$, a single Newton update is
+\begin{gather*}
+\beta^{new} = \beta^{old} - \bigg(\frac{\partial^{2} \ell(\beta)}{\partial \beta \partial \beta^{T}}\bigg)^{-1} \frac{\partial \ell(\beta)}{\partial \beta}
+\end{gather*}
+
+Now we will try to simplify by vectorizing the model. Let $\mathbf{y}$ denote the vector of $y_{i}$, 
+$\mathbf{X}$ the $N \times (p+1)$ matrix of $x_{i}$ ($p$ predictors with one intercept), 
+$\mathbf{p}$ the vector of fitted probabilities with $i$th element $p(x_{i};\beta^{\text{old}})$ and
+$\mathbf{W}$ a $N \times N$ diagonal matrix of weights with $i$th diagonal element $p(x_{i};\beta^{\text{old}})(1-p(x_{i};\beta^{\text{old}}))$. 
+The structure of the notation and the model: ~\\~\\
+
+$
+\mathbf{y}_{N \times 1} = \begin{pmatrix}
+  y_{1}  \\
+  y_{2}  \\
+  \vdots  \\
+  y_{N} 
+ \end{pmatrix} 
+$,
+$
+\mathbf{X}_{N \times (p+1)} = \begin{pmatrix}
+  x_{11} & x_{12} & \cdots & x_{1p} \\
+  x_{21} & x_{22} & \cdots & x_{2p} \\
+  \vdots & \vdots & \ddots & \vdots  \\
+  x_{N1} & x_{N2} & \cdots & x_{Np} 
+ \end{pmatrix}
+$, ~\\
+
+$
+\mathbf{p}_{N \times 1} = \begin{pmatrix}
+  p(x_{1};\beta^{\text{old}})  \\
+  p(x_{2};\beta^{\text{old}})  \\
+  \vdots  \\
+  p(x_{N};\beta^{\text{old}}) 
+ \end{pmatrix} 
+$, ~\\
+\begin{gather*}
+\footnotesize
+\mathbf{W}_{N \times N} = \begin{pmatrix}
+  p(x_{1};\beta^{\text{old}})(1-p(x_{1};\beta^{\text{old}})) & 0 & \cdots & 0 \\
+  0 & p(x_{2};\beta^{\text{old}})(1-p(x_{2};\beta^{\text{old}})) & \cdots & 0 \\
+  \vdots & \vdots & \ddots & \vdots  \\
+  0 & 0 & \cdots & p(x_{N};\beta^{\text{old}})(1-p(x_{N};\beta^{\text{old}})) 
+ \end{pmatrix}
+\end{gather*}
+
+\begin{align*}
+\frac{\partial \ell(\beta)}{\partial \beta} & = \mathbf{X}^{T}(\mathbf{y}-\mathbf{p}) \\
+\frac{\partial^{2} \ell(\beta)}{\partial \beta \partial \beta^{T}}  & = -\mathbf{X}^{T} \mathbf{W} \mathbf{X} \\
+\beta^{\text{new}} &= \beta^{\text{old}} + \big( \mathbf{X}^{T} \mathbf{W} \mathbf{X} \big)^{-1} \mathbf{X}^{T}(\mathbf{y}-\mathbf{p}) \\
+ & = \big( \mathbf{X}^{T} \mathbf{W} \mathbf{X} \big)^{-1} \mathbf{X}^{T} \mathbf{W} \big( \mathbf{X} \beta^{\text{old}} +  \mathbf{W}^{-1}(\mathbf{y}-\mathbf{p})\big) \\
+ & = \big( \mathbf{X}^{T} \mathbf{W} \mathbf{X} \big)^{-1} \mathbf{X}^{T} \mathbf{W} \mathbf{z}
+\end{align*}
+
+Response of weighted least squares step, sometimes known as adjusted response:
+\begin{gather}
+\mathbf{z} = \mathbf{X} \beta^{\text{old}} +  \mathbf{W}^{-1}(\mathbf{y}-\mathbf{p})
+\end{gather}
+
+The equations above solved repeatedly, since at each iteration $\mathbf{p}$ changes, and hence so does $\mathbf{W}$ and $\mathbf{z}$.
+This algorithm is referred to as iteratively reweighed least squares (IRLS).
+
+\end{document}

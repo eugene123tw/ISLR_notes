@@ -1,0 +1,191 @@
+---
+title: "Chapter 4 - Applied"
+output: html_notebook
+---
+
+# Logistic Regression
+$$ 
+\boldsymbol{\beta} = 
+\left(
+\begin{array}{c}
+\beta_{0} \\
+\beta_{1} \\
+\beta_{2} \\
+\beta_{3} \\
+\beta_{4} \\
+\beta_{5} \\
+\beta_{6}
+\end{array}\right)
+$$
+
+$$ \mathbf{x} = (\mathbf{1} ~ \mathbf{x}_{1} ~ \mathbf{x}_{2} ~ \mathbf{x}_{3} ~ \mathbf{x}_{4} ~ \dots ~~ \mathbf{x}_{n}) $$
+Sigmoid Function is 
+$$
+p(x) = \frac{1}{1+e^{-\mathbf{x}\boldsymbol{\beta}}}
+$$
+
+Implementation of **Iteratively reweighted least squares** :
+
+```{r}
+library(ISLR)
+
+# sigmoid function as 
+sigmoid = function(x,beta){
+  return(1/(1+exp(-(x %*% beta))))
+}
+
+loglikelihood = function(y,x,beta){
+  sum = 0
+  for(i in 1:length(y)){
+    l_i = y[i]*log(sigmoid(x[i,],beta)) + (1-y[i]) * log(1-sigmoid(x[i,],beta))
+    sum = sum + l_i
+  }
+  return(sum)
+}
+
+adjustedResponse = function(y,x,beta){
+  return(solve(t(x) %*% w %*% x) %*% t(x) %*% (y-p))
+}
+
+
+
+data = Smarket[,c('Lag1','Lag2','Lag3','Lag4','Lag5','Volume')]
+data = cbind(x_0 = rep(1, nrow(data)), data)
+data = as.matrix(data)
+y = Smarket[,c("Direction")]
+y = cbind(y,logical = y %in% "Up")
+y = y[,2]
+
+#beta = matrix(runif(7),nrow = 7)
+beta = matrix(rep(0,7),nrow = 7)
+
+
+result = rep(0,10)
+beta_result = matrix(rep(0,7),nrow=1)
+
+for(i in 1:10){
+  p = sigmoid(data, beta)
+  w = diag(as.vector(p*(1-p)))
+  beta = beta + adjustedResponse(y,data,beta)
+  beta_result = rbind(beta_result, t(beta))
+  result[i] = loglikelihood(y,data,beta)
+}
+```
+
+R build-in **IRLS**:
+
+```{r}
+glm.fit = glm(Direction~Lag1+Lag2+Lag3+Lag4+Lag5+Volume, data = Smarket, family = binomial)
+summary(glm.fit)
+```
+
+```predict()``` generate the probabilities of our original data fit
+
+```{r}
+attach(Smarket)
+glm.probs = predict(glm.fit, type= "response")
+glm.probs[1:10]
+Direction[1:10]
+```
+
+Now, we want to create a confussion matrix
+```{r}
+glm.pred = rep("Down", 1250)
+glm.pred[glm.probs>0.5] = "Up"
+table(glm.pred, Direction)
+```
+
+|              | - (Predicted)  | + (Predicted)  | Total |
+|------------- | -------------  |:-------------: | -----:|
+|  - (True)    | True Negative  | False Positive | $N$   |
+|  + (True)    | False Negative | True Positive  | $P$   |
+|  Total       | $N^*$          |    $P^*$       |       |
+
+| Name                | Definition     | Synonyms |
+|-------------        | -------------  |:-------------:| 
+|  False Pos. rate    | $FP/N$         | Type I error  | 
+|  True Pos. rate     | $TP/P$         | Power(檢定力) | 
+|  Pos. Pred. value   | $TP/P^{*}$     |    Precision  |  
+|  Neg. Pred. value   | $TN/N^{*}$     |               |  
+
+That's calculate the training error rate from the table above
+```{r}
+(457+141)/1250 * 100
+```
+
+The training error rate is 47.84%
+
+# Linear Discriminant Analysis
+
+Implementation of **Linear Discriminant Analysis** :
+
+Two predictors : Lag1, Lag2, And divide data to individual groups
+```{r}
+train = (Smarket$Year<2005)
+data = Smarket[train,c('Lag1','Lag2','Direction')]
+data_0 = data[data$Direction == "Down",c('Lag1','Lag2')]
+data_1 = data[data$Direction == "Up",c('Lag1','Lag2')]
+mean_0 = as.matrix(apply(data_0,2,mean), nrow=2)
+mean_1 = as.matrix(apply(data_1,2,mean), nrow=2)
+pi_0 = nrow(data[data$Direction=="Down",])/nrow(data)
+pi_1 = nrow(data[data$Direction=="Up",])/nrow(data)
+S = ((nrow(data_0)-1)*cov(data_0) + (nrow(data_1)-1)*cov(data_1))/(nrow(data)-2)
+
+classifier = function(x,S,mean_0,mean_1,pi_0,pi_1){
+  x = as.matrix(x)
+  delta_0 = x %*% solve(S) %*% mean_0 - 0.5 * t(mean_0) %*% solve(S)%*% mean_0 + log(pi_0)
+  delta_1 = x %*% solve(S) %*% mean_1 - 0.5 * t(mean_1) %*% solve(S)%*% mean_1 + log(pi_1)
+  
+  if(delta_0 > delta_1){
+    return("Down")
+  }else{
+    return("Up")
+  }
+}
+
+predict = data.frame(predict = rep(0,998))
+
+for(i in 1:998){
+  predict[i,1] = classifier(data[i,1:2],S,mean_0,mean_1,pi_0,pi_1)
+}
+
+```
+
+
+
+R build-in **LDA**:
+```{r}
+library(MASS)
+train = Smarket$Year<2005
+lda.fit = lda(Direction~Lag1+Lag2, data= Smarket, subset= train, method="mle")
+lda.pred = predict(lda.fit)
+data = cbind(data,lda.pred$class) 
+lda.pred = predict(lda.fit)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

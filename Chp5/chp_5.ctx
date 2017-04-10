@@ -1,0 +1,265 @@
+\documentclass[12pt,a4paper]{article}%
+\usepackage{makeidx}
+\makeindex
+\usepackage{bm}
+\usepackage{framed} % Easier way to use Framebox
+\usepackage{pdfpages} % Import PDF in latex document
+\usepackage{fancybox}
+\usepackage{ulem} % for text strikethrough
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{slashbox}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{amsmath, amssymb, amsthm}  % For mathematical symbols
+\usepackage{rotating, booktabs}  % For table-rotating
+\usepackage{longtable,booktabs}
+\usepackage{wallpaper}  % For watermark
+\usepackage{colortbl,color}
+\usepackage{xcolor}
+\usepackage{graphicx,psfrag}
+\usepackage{tabularx,array}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage[subfigure]{tocloft}
+\usepackage[tight]{subfigure}
+\usepackage{float,booktabs,threeparttable}
+\usepackage{caption}
+\usepackage{menukeys}
+\usepackage{pst-tree}
+\usepackage{longtable}
+\usepackage{appendix}
+\usepackage{adjustbox}
+\usepackage{pdfpages}
+\usepackage{blkarray} %For adding Matrix label on row and column
+\usepackage{url}
+
+\def\se{{\rm se}}
+%\newcommand{\red}{\color{red}}
+\linespread{1.5}  % The linespread is 1.5.
+
+% Numbered theorems, definitions, algorithm and lemmas ======================================================================
+\newtheorem{thm}{Theorem}  % Define new theorem.
+\newtheorem{alg}{Algorithm}[section]  % Define new algorithm.
+\newtheorem{definition}{Definition}
+% ===========================================================================================================================
+
+% For writing pseudo code ======================================================================
+\usepackage{algorithm}% http://ctan.org/pkg/algorithms
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+% ===========================================================================================================================
+
+\theoremstyle{definition}
+\theoremstyle{plain}
+\setcounter{secnumdepth}{5}
+
+
+\renewcommand{\contentsname}{\ctxfbb Table of Contents}
+\renewcommand{\listfigurename}{\ctxfbb List of Figures}
+\renewcommand{\listtablename}{\ctxfbb List of Tables}
+\renewcommand{\figurename}{\footnotesize Figure}
+\renewcommand{\tablename}{\footnotesize Table}
+\newcommand{\loflabel}{Figure}
+\newcommand{\lotlabel}{Table}
+\setlength{\abovecaptionskip}{0pt}
+
+%\renewcommand{\cftsecpresnum}{Chapter }
+
+\renewcommand{\cftsecnumwidth}{7em}
+%\renewcommand{\thesection}{{\ctxfbb Chapter}~~ \arabic{section}}
+%\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+%\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+\renewcommand{\appendixpagename}{\Large\ctxfbb Appendix} % \ctxfb
+\renewcommand{\arraystretch}{1.2}
+
+\usepackage{appendix}
+
+\def\oo{\nolinebreak[4]\hspace{.3em}\raise.7ex\hbox{。}\hspace{0.3em}}
+\def\pp{\nolinebreak[4]\hspace{.3em}\raise.8ex\hbox{，}\hspace{0.3em}}
+\def\dd{\nolinebreak[4]\hspace{.3em}\raise.8ex\hbox{、}\hspace{0.3em}}
+\def\kk{\nolinebreak[4]\hspace{.3em}\raise.3ex\hbox{；}\hspace{0.3em}}
+\def\mm{\nolinebreak[4]\hspace{.3em}\raise.3ex\hbox{：}\hspace{0.3em}}
+\def\aa{\nolinebreak[4]\hspace{.3em}\raise.3ex\hbox{？}\hspace{0.3em}}
+
+%%%%%%%%%%
+
+%%%%%%%%%%
+\usepackage[refpage]{nomencl}
+\renewcommand{\nomname}{Notations}
+\renewcommand*{\pagedeclaration}[1]{\unskip\dotfill\hyperpage{#1}}
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+\makenomenclature
+\usepackage{makeidx}
+\makeindex
+%%%%%%%%%%%%
+%\let\clipbox\relax
+
+%%%%%%%%%%%%
+\ctxfdef{\section}{\ctxfbb}
+\ctxfdef{\subsection}{\ctxfbb} %\ctxfr
+
+\def\tb#1#2{\mathop{#1\vphantom{\sum}}\limits_{\displaystyle #2}}
+
+\newtheorem{lma}{\textbf{Lemma}}
+
+% ======================== Set length ========================
+\setlength{\columnsep}{1cm}
+\setlength\parindent{0pt}
+\textheight = 22cm
+\textwidth = 16.5cm
+\hoffset=-1cm
+\footskip=40pt
+\renewcommand*{\arraystretch}{0.8}
+% ============================================================
+
+
+% =============================
+% Equation numbering
+\numberwithin{equation}{section}
+% =============================
+
+\begin{document}
+\setcounter{section}{4}
+\section{Resampling Methods}
+
+\begin{itemize}
+\item Objection
+	\begin{enumerate}
+	\item To detect overfitting 
+	\item To choose the model with the most suitable flexibility level (model selection)
+	\end{enumerate}
+\end{itemize}
+
+\subsection{\textbf{Cross-Validation}}
+\subsubsection{\textbf{The Validation Set Approach}}
+\begin{itemize}
+\item \textbf{Implementation}:
+	\begin{enumerate}
+	\item Randomly divide observations in half, so $n/2$ as validation set and the other half as training set
+	\item Compute the MSE for the validation set
+	\item Repeat the steps stated above so we can get the results as Figure~\ref{figure-5.2}
+	\end{enumerate}
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{images//5_2.eps}
+\\~\\
+\caption{}\label{figure-5.2}
+\end{figure}
+
+\begin{itemize}
+\item Advantages
+	\begin{enumerate}
+	\item Before, we only choose part of the data as training set. Now, we should train our models on different set of data to overcome overfitting.
+	\item From Figure~\ref{figure-5.2} we observed 10 curves indicate that the model with a quadratic term has a smaller validation set MSE then the model with only a linear term.
+	      This helps us to choose the degree of polynomial when training a model.
+	\end{enumerate}
+\end{itemize}
+
+\begin{itemize}
+\item Drawbacks
+	\begin{enumerate}
+	\item The validation estimate of the test error can be highly variable, depending on which observations are included in the training set and in the validation set.
+	\item In the validation approach only half of the data are used to fit the model. Since statistical methods tend to perform worse when trained on fewer observations. 
+		  This implies the validation set error rate may tend to overestimate the test error rate for the model fit on the entire data set.
+	\end{enumerate}
+\end{itemize}
+
+\subsection{\textbf{Leave-One-Out Cross-Validation (LOOCV)}}
+\textbf{Implementation}:
+\begin{table}[H]
+\centering
+\begin{tabular}{c | c | l}
+Validation Set & Training Set & MSE \\
+\hline 
+$(x_{1},y_{1})$ & $\{(x_{2},y_{2}), (x_{3},y_{3}), \dots, (x_{n},y_{n}) \}$ & $\text{MSE}_{1}=(y_{1}-\hat{y}_{1})^{2}$ \\
+\hline
+$(x_{2},y_{2})$ & $\{(x_{1},y_{1}), (x_{3},y_{3}), \dots, (x_{n},y_{n}) \}$ & $\text{MSE}_{2}=(y_{2}-\hat{y}_{2})^{2}$  \\
+\hline
+$(x_{3},y_{3})$ & $\{(x_{1},y_{1}), (x_{2},y_{2}), \dots, (x_{n},y_{n}) \}$ & $\text{MSE}_{3}=(y_{3}-\hat{y}_{3})^{2}$  \\
+
+$\vdots$ & $\vdots$ &  \multicolumn{1}{c}{$\vdots$}  \\
+
+$(x_{n},y_{n})$ & $\{(x_{1},y_{1}), (x_{2},y_{2}), \dots, (x_{n-1},y_{n-1}) \}$ & $\text{MSE}_{n}=(y_{n}-\hat{y}_{n})^{2}$  \\
+\hline
+ & & $\text{CV}_{(n)}=\frac{1}{n}\sum\limits_{i=1}^{n} \text{MSE}_{i}$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+\item Advantages
+	\begin{enumerate}
+	\item LOOCV create less bias. Since we repeatedly fit the method using training sets that contain $n-1$ observations.
+	\item LOOCV does not overestimate the test error rate as much as the validation set approach does. 
+	\item LOOCV will always yield the same results compared to validation set approach.
+	\end{enumerate}
+\end{itemize}
+
+\begin{itemize}
+\item Drawbacks
+	\begin{enumerate}
+	\item Computational expensive
+	\end{enumerate}
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{images//5_4.eps}
+\\~\\
+\caption{The LOOCV error curve}\label{figure-5.4}
+\end{figure}
+
+\subsubsection{\textbf{k-Fold Cross-Validation}}
+\begin{figure}[H]
+\centering
+\psfrag{A}[c][c]{Validation}
+\psfrag{B}[c][c]{Training}
+\includegraphics[scale=1]{images//5_5.eps}
+\\~\\
+\caption{5-fold CV. A set of $n$ observations is randomly split into five non-overlapping groups. If we set $k = n$, then we get LOOCV.}\label{figure-5.5}
+\end{figure}
+
+\begin{itemize}
+\item \textbf{Implementation}:
+	\begin{enumerate}
+	\item $k=(1,\dots,n/k)$
+	\item Randomly divide the data into $k$ groups, each group contains $n/k$ observations.
+	\item Choose the $k$th fold as validation set, the other observations as training set.
+	\item Compute the MSE for the $k$th fold.
+	\item Repeat the process for $k$ times. 
+	\end{enumerate}
+\end{itemize}
+
+\begin{equation*}
+\text{CV}_{(k)}=\frac{1}{k}\sum\limits_{i=1}^{k} \text{MSE}_{i}
+\end{equation*}
+~\\
+When we perform cross-validation, our goal might be to determine how well a method can be expected to perform on independent data; in this case, the actual estimate of the test MSE is of interest.
+But at other times we are interested in finding the right flexibility level that fit the real data.
+That means, we are looking for the flexibility level location of the minimum point in the estimated test MSE curve.
+
+\begin{figure}[H]
+\centering
+\psfrag{A}[c][c]{Validation}
+\psfrag{B}[c][c]{Training}
+\includegraphics[scale=0.8]{images//5_6.eps}
+\\~\\
+\caption{All of the curves come close to identifying the correct levels of flexibility (the flexibility level corresponding to the smallest MSE)}\label{figure-5.6}
+\end{figure}
+
+
+\section*{Reference}
+\noindent
+\begin{description}\itemsep=-2pt
+\item 張翔 (2012), 《提綱契領學統計》, 四版, 鼎茂圖書
+\item Friedman, J., Hastie, T., \& Tibshirani, R. (2001). {\it{The elements of statistical learning}} (Vol. 1). Springer, Berlin: Springer series in statistics.
+\item James, G., Witten, D., Hastie, T., \& Tibshirani, R. (2013). {\it{An introduction to statistical learning}} (Vol. 6). New York: springer.
+\item Wasserman, L. (2013). {\it{All of statistics: a concise course in statistical inference}}. Springer Science \& Business Media.
+\item J Li, Linear Discriminant Analysis, \url{http://sites.stat.psu.edu/~jiali/course/stat597e/notes2/lda.pdf}
+\end{description}
+
+\end{document}
