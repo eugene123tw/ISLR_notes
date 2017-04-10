@@ -251,6 +251,38 @@ That means, we are looking for the flexibility level location of the minimum poi
 \caption{All of the curves come close to identifying the correct levels of flexibility (the flexibility level corresponding to the smallest MSE)}\label{figure-5.6}
 \end{figure}
 
+\subsubsection{\textbf{Bias-Variance Trade-Off for k-Fold Cross-Validation}}
+\begin{itemize}
+\item \textbf{LOOCV}:
+	\begin{itemize}
+	\item Bias: approximately unbiased estimates of the test error, since each training set contains $n-1$ observations.
+	\item Variance: higher variance, the MSE is averaging the outputs of $n$ fitted models and each iteration we are training on an almost identical set of observations; therefore, these outputs are highly correlated with each other.
+	\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item \textbf{k-Fold CV}:
+	\begin{itemize}
+	\item Bias: intermediate level of bias, since each training set contains $n-\frac{n}{k}$ observations
+	\item Variance: lower variance, the MSE is the averaging the outputs of $k$ fitted model (less fitted model than LOOCV) that are less correlated with each other, since the overlap between the training sets in each model is smaller.
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{\textbf{Cross-Validation on Classification Problems}}
+
+\begin{equation*}
+\text{CV}_{(n)} = \frac{1}{n}\sum\limits_{i=1}^{n} I(y_{i} \neq \hat{y}_{i})
+\end{equation*}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{images//5_8.eps}
+\\~\\
+\caption{Test error(brown), training error(blue) and 10-fold CV error(black) Left: Logistic Regression using polynomial functions of the predictore. Right: The KNN classifier with different values of $K$}\label{figure-5.8}
+\end{figure}
+
+From Figure~\ref{figure-5.8} we find that the test error displays a characteristic of U-shape. The 10-fold CV error rate provides a good approximation to the test error rate. 
+The 10-fold CV reaches a minimum when fourth-order polynomials are used, which is very close to the minimum of the test error curve, which occurs when third-order polynomials are used. 
 
 \section*{Reference}
 \noindent
