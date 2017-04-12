@@ -125,10 +125,10 @@
 \section{Resampling Methods}
 
 \begin{itemize}
-\item Objection
+\item Goal
 	\begin{enumerate}
-	\item To detect overfitting 
-	\item To choose the model with the most suitable flexibility level (model selection)
+	\item To choose the model with the most suitable flexibility level (model selection).
+	\item The uncertainty (Standard error) in the parameter estimate can be measured by computing the sampling distribution of the estimator.
 	\end{enumerate}
 \end{itemize}
 
@@ -168,7 +168,7 @@
 	\end{enumerate}
 \end{itemize}
 
-\subsection{\textbf{Leave-One-Out Cross-Validation (LOOCV)}}
+\subsubsection{\textbf{Leave-One-Out Cross-Validation (LOOCV)}}
 \textbf{Implementation}:
 \begin{table}[H]
 \centering
@@ -283,6 +283,115 @@ That means, we are looking for the flexibility level location of the minimum poi
 
 From Figure~\ref{figure-5.8} we find that the test error displays a characteristic of U-shape. The 10-fold CV error rate provides a good approximation to the test error rate. 
 The 10-fold CV reaches a minimum when fourth-order polynomials are used, which is very close to the minimum of the test error curve, which occurs when third-order polynomials are used. 
+
+
+\subsection{\textbf{The Bootstrap}}
+Bootstrap is a simple Monte Carlo technique to approximate the sampling distribution. 
+Through the sampling distribution, we can evaluate how good our data fit to the model.
+
+Suppose we have a model fit to a set of training data. We denote the training set by $\boldsymbol{Z} = (z_{1},z_{1},\dots,z_{N})$ where $z_{i}=(x_{i},y_{i})$.  
+
+\begin{itemize}
+\item \textbf{Implementation}:
+	\begin{enumerate}
+	\item Randomly draw data sets with replacement from the training data. Each sets $\boldsymbol{Z}^{*b}$ contains $N$ observations.
+	\item By plugging the data sets $\boldsymbol{Z}^{*b}$ to the estimator $S(\cdot)$ we defined, we get our estimates $S(\boldsymbol{Z}^{*b})$. 
+	\item We can estimate any aspect of the distribution of $S(\boldsymbol{Z})$, say, its variance, $\widehat{\text{Var}}[S(\boldsymbol{Z})].$ where $\bar{S}^{*} = \sum_{b} S(\boldsymbol{Z}^{*b})/B$
+	\end{enumerate}
+\end{itemize}
+
+One approach to estimate prediction error is to fit the model on a set of bootstrap samples, and then keep track of how well it predicts the original training set. 
+If $\hat{f}^{*b}(x_{i})$ is the predicted value at $x_{i}$, from the model fitted to the $b$th bootstrap dataset, our estimate is 
+
+\begin{equation*}
+\widehat{\text{Err}_{\text{boot}}} = \frac{1}{B} \frac{1}{N} \sum\limits_{b=1}^{B} \sum\limits_{i=1}^{N} (y_{i}-\hat{f}^{*b}(x_{i}))^{2}
+\end{equation*}
+
+The bootstrap implementation can be illustrated as below Figure,
+\begin{framed}
+\begin{figure}[H]
+\centering
+\psfrag{a}[c][c]{Training Set}
+\psfrag{b}[c][c]{Bootstrap Samples}
+\psfrag{c}[c][c]{Prediction Error}
+\psfrag{A}[r][l]{\parbox{1cm} {$\boldsymbol{Z}=(z_{1},z_{2},\dots,z_{N})$}}
+\psfrag{B}[l][l]{\footnotesize \parbox{1cm}{  
+\begin{gather*}
+\boldsymbol{Z}^{*1} = 
+\begin{array}{c}
+(x^{*1}_{1},y^{*1}_{1}) \\
+(x^{*1}_{2},y^{*1}_{2}) \\
+\vdots \\
+(x^{*1}_{N},y^{*1}_{N})
+\end{array}
+\end{gather*}
+}}
+\psfrag{C}[l][l]{\footnotesize \parbox{1cm}{  
+\begin{gather*}
+\boldsymbol{Z}^{*2} = 
+\begin{array}{c}
+(x^{*2}_{1},y^{*2}_{1}) \\
+(x^{*2}_{2},y^{*2}_{2}) \\
+\vdots \\
+(x^{*2}_{N},y^{*2}_{N})
+\end{array}
+\end{gather*}
+}}
+\psfrag{D}[l][l]{\footnotesize \parbox{1cm}{  
+\begin{gather*}
+\boldsymbol{Z}^{*B} = 
+\begin{array}{c}
+(x^{*B}_{1},y^{*B}_{1}) \\
+(x^{*B}_{2},y^{*B}_{2}) \\
+\vdots \\
+(x^{*B}_{N},y^{*B}_{N})
+\end{array}
+\end{gather*}
+}}
+\psfrag{E}[l][l]{\hspace{0.5cm} \footnotesize $\boldsymbol{Z}^{*1} \sim \hat{f}^{*1}$}
+\psfrag{F}[l][l]{\hspace{0.5cm} \footnotesize $\boldsymbol{Z}^{*2} \sim \hat{f}^{*2}$}
+\psfrag{G}[l][l]{\hspace{0.5cm} \footnotesize $\boldsymbol{Z}^{*B} \sim \hat{f}^{*B}$}
+
+\psfrag{H}[c][c]{\footnotesize $\sum\limits_{i=1}^{N}(y_{i}-\hat{f}^{*1}(x_{i}))^{2}$}
+\psfrag{I}[c][c]{\footnotesize $\sum\limits_{i=1}^{N}(y_{i}-\hat{f}^{*2}(x_{i}))^{2}$}
+\psfrag{J}[c][c]{\footnotesize $\sum\limits_{i=1}^{N}(y_{i}-\hat{f}^{*B}(x_{i}))^{2}$}
+\includegraphics[scale=0.8]{images//bootstrap.eps}
+\\~\\
+\caption{}\label{bootstrap}
+\end{figure}
+\end{framed}
+
+However, $\widehat{\text{Err}_{\text{boot}}}$ is not a good way of estimating prediction error. 
+The reason is that the bootstrap datasets are acting as the training samples, while the original traiing set is acting as the test sample, and these two samples have observations in common. 
+This overlap can make overfit predictions look unrealistically good. \\
+
+In order to solve this issue, we apply the leave-one-out bootstrap estimate of prediction error, this is, 
+\begin{equation*}
+\widehat{\text{Err}}^{(1)} = \frac{1}{N} \sum\limits_{i=1}^{N} \frac{1}{|C^{-i}|} \sum\limits_{b \in C^{-i}} (y_{i}-\hat{f}^{*b}(x_{i}))^{2} 
+\end{equation*}
+
+\begin{itemize}
+\item $C^{-i}$ : The set of indices of the bootstrap samples $b$ that do not contain observation $i$ 
+\item $|C^{-i}|$ : the number of such bootstrap samples
+\end{itemize}
+
+
+\begin{figure}[H]
+\centering
+\psfrag{A}[r][l]{\footnotesize $z_{1}=(x_{1},y_{1})$}
+\psfrag{B}[c][c]{\footnotesize $z_{1} \not\in \boldsymbol{Z}^{*1} $}
+\psfrag{C}[c][c]{\footnotesize $z_{1} \not\in \boldsymbol{Z}^{*2}$}
+\psfrag{D}[c][c]{\footnotesize $z_{1} \in \boldsymbol{Z}^{*3}$}
+\psfrag{E}[c][c]{\footnotesize $(y_{1}-\hat{f}^{*1}(x_{1}))^{2}$}
+\psfrag{F}[c][c]{\footnotesize $(y_{1}-\hat{f}^{*2}(x_{1}))^{2}$}
+\psfrag{G}[c][c]{\footnotesize null}
+\psfrag{H}[c][c]{\footnotesize $\frac{1}{2} \sum\limits_{b=1}^{2} (y_{1}-\hat{f}^{*b}(x_{1}))^{2}$}
+\includegraphics[scale=0.8]{images//bootstrap_loo.eps}
+\\~\\
+\caption{The figure gives an example on $z_{1}=(x_{1},y_{1})$. After repeating the process through all the observations ($z_{2},\dots,z_{N}$) and summarize them, we can get $\widehat{\text{Err}}^{(1)}$.}\label{bootstrap_loo}
+\end{figure}
+
+
 
 \section*{Reference}
 \noindent
