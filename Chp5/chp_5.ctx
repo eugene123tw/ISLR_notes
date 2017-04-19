@@ -34,6 +34,8 @@
 \usepackage{pdfpages}
 \usepackage{blkarray} %For adding Matrix label on row and column
 \usepackage{url}
+\usepackage{indentfirst} % indent the first paragraph of new section
+\usepackage{titlesec} % change the way \subsubsubsection formats
 
 \def\se{{\rm se}}
 %\newcommand{\red}{\color{red}}
@@ -113,12 +115,26 @@
 \footskip=40pt
 \renewcommand*{\arraystretch}{0.8}
 % ============================================================
-
+% ======================== Paragraph Indent ========================
+\setlength{\parindent}{1em}
+\setlength{\parskip}{1em}
+% ==================================================================
 
 % =============================
 % Equation numbering
 \numberwithin{equation}{section}
 % =============================
+% ======================== SubSubSubSection Format ========================
+\titleclass{\subsubsubsection}{straight}[\subsection]
+
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+
+\titleformat{\subsubsubsection}
+  {\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+\titlespacing*{\subsubsubsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+% ==================================================================
 
 \begin{document}
 \setcounter{section}{4}
@@ -391,6 +407,53 @@ In order to solve this issue, we apply the leave-one-out bootstrap estimate of p
 \caption{The figure gives an example on $z_{1}=(x_{1},y_{1})$. After repeating the process through all the observations ($z_{2},\dots,z_{N}$) and summarize them, we can get $\widehat{\text{Err}}^{(1)}$.}\label{bootstrap_loo}
 \end{figure}
 
+The ".632 estimator" is designed to alleviate this bias. It is defined by,
+\begin{equation*}
+\widehat{Err}^{(.632)} = .368 \cdot \overline{\text{err}} + .632 \cdot \widehat{\text{Err}}^{(1)}
+\end{equation*}
+
+$\overline{\text{err}}$ is the training error. The derivation of the .632 estimator is complex; intuitively it pulls the leave-one out bootstrap estimate($\widehat{\text{Err}}^{(1)}$) down toward the training error rate, and hence reduces its upward bias.
+
+
+\subsection{Exercises}
+%====================================================================================================================================
+% 2.====================================================================================================================================
+\begin{enumerate}
+\item[2.] We will now derive the probability that a given observation is part of a bootstrap sample. Suppose that we obtain a bootstrap sample from a set of $n$ observations.
+\begin{enumerate}
+	\item[(a)] What is the probability that the first bootstrap observation is not the $j$th observation from the original sample? Justify your answer.
+	\item[(b)] What is the probability that the second bootstrap observation is not the $j$th observation from the original sample?
+	\item[(c)] Argue that the probability that the $j$th observation is not in the bootstrap sample is $(1-1/n)^{n}$.
+	\item[(d)] When $n = 5$, what is the probability that the $j$th observation is in the bootstrap sample?
+	\item[(e)] When $n = 100$, what is the probability that the $j$th observation is in the bootstrap sample?
+	\item[(f)] When $n = 10000$, what is the probability that the $j$th observation is in the bootstrap sample?
+	\item[(g)] Create a plot that displays, for each integer value of $n$ from 1 to 100000, the probability that the $j$th observation is in the bootstrap sample. Comment on what you observe.
+	\item[(h)] We will now investigate numerically the probability that a bootstrap sample of size $n = 100$ contains the $j$th observation. Here $j = 4$. We repeatedly create bootstrap samples, and each time we record whether or not the fourth observation is contained in the bootstrap sample.
+\end{enumerate}
+\end{enumerate}
+
+
+\begin{oframed}
+Answer: ~\\
+$A$ : The event that the bootstrap observation is the $j$th observation from the original data set. \\
+$A'$ : The event that the bootstrap observation is not the $j$th observation from the original data set. \\
+$P(A)$ : The probability that the bootstrap observation is the $j$th observation from the original data set. \\
+$P(A')= 1-P(A)$ : The probability that the bootstrap observation is not the $j$th observation from the original data set.
+\begin{enumerate}
+	\item[(a)] $P(A') = 1-\frac{1}{n}$
+	\item[(b)] $P(A') = 1-\frac{1}{n}$
+	\item[(c)] We draw $n$ times from the original sample with replacement, so the probability that for $n$ repeat drawings, the $j$th observation is not include in the bootstrap is,
+		\begin{equation*}
+			P(A')^{n} = (1-\frac{1}{n})^{n}
+		\end{equation*}
+	\item[(d)] Probability of the $j$th obs. in 5 observations bootstrap sample : \\ $ 1-P(A')^{5} = 1-(1-\frac{1}{5})^{5} = 0.67232$
+	\item[(e)] Probability of the $j$th obs. in 100 observations bootstrap sample : \\ $ 1-P(A')^{100} = 1-(1-\frac{1}{100})^{100} = 0.63397 $	
+	\item[(f)] Probability of the $j$th obs. in 10000 observations bootstrap sample: \\ $ 1-P(A')^{10000} = 1-(1-\frac{1}{10000})^{10000} = 0.6321  $	
+	\item[(g)] $P(\text{observation }i \in \text{bootstrap sample } b) = 1-(1-\frac{1}{n})^{n} = 1-e^{-1}=0.632$. \\
+			   This implies the average number of distinct observations in each bootstrap sample is about $0.632 \cdot n$, so its bias will roughly behave like that of twofold cross-validation.
+			   More detail in The Elements of Statistical Learning Section 7.11.
+\end{enumerate}
+\end{oframed}
 
 
 \section*{Reference}

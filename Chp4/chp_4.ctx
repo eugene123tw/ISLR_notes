@@ -34,6 +34,8 @@
 \usepackage{pdfpages}
 \usepackage{blkarray} %For adding Matrix label on row and column
 \usepackage{url}
+\usepackage{indentfirst} % indent the first paragraph of new section
+\usepackage{titlesec} % change the way \subsubsubsection formats
 
 \def\se{{\rm se}}
 %\newcommand{\red}{\color{red}}
@@ -113,12 +115,25 @@
 \footskip=40pt
 \renewcommand*{\arraystretch}{0.8}
 % ============================================================
-
-
+% ======================== Paragraph Indent ========================
+\setlength{\parindent}{1em}
+\setlength{\parskip}{1em}
+% ==================================================================
 % =============================
 % Equation numbering
 \numberwithin{equation}{section}
 % =============================
+% ======================== SubSubSubSection Format ========================
+\titleclass{\subsubsubsection}{straight}[\subsection]
+
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+
+\titleformat{\subsubsubsection}
+  {\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+\titlespacing*{\subsubsubsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+% ==================================================================
 
 \begin{document}
 \setcounter{section}{3}
@@ -126,7 +141,7 @@
 \subsection{\textbf{Logistic Regression}}
 \subsubsection{\textbf{Logistic Model}}
 
-logistic function:
+Logistic function:
 \begin{gather}
 p(x_{i}) = \frac{e^{\beta^{T}x_{i}}}{1+e^{\beta^{T}x_{i}}} = \frac{1}{1+e^{-\beta^{T}x_{i}}},~~ 0 \leq p(x_{i}) \leq 1, ~~ -\infty < x_{i} < \infty
 \label{logistic-model}
@@ -177,7 +192,7 @@ L(\theta) = f_{X_{1},X_{2},\dots,X_{n}}(x_{1},x_{2},\dots,x_{n}) = \prod_{i=1}^{
 \end{definition}
 \end{framed}
 
-\textbf{\color{blue}{Maximum Likelihood Estimator, $\hat{\theta}_{\rm MLE}$}}:\\
+\subsubsubsection{\color{blue}{Maximum Likelihood Estimator, $\hat{\theta}_{\rm MLE}$}}
 找一個 $\theta$ 使得拿到這組隨機樣本($X_{1},X_{2},\dots,X_{n}$)的可能性為最大, 亦即, 找一個 $\theta$ 使得概似函數 $L(\theta)$ 為最大:
 \begin{gather*}
 \text{arg}\,\max\limits_{\theta}\,L(\theta), \text{求解}\,\hat{\theta}_{\rm MLE}

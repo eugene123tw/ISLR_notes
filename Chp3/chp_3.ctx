@@ -32,9 +32,11 @@
 \usepackage{appendix}
 \usepackage{adjustbox}
 \usepackage{pdfpages}
+\usepackage{indentfirst} % indent the first paragraph of new section
+\usepackage{titlesec} % change the way \paragraph formats
 
 \def\se{{\rm se}}
-%\newcommand{\red}{\color{red}}
+
 \linespread{1.5}  % The linespread is 1.5.
 \newtheorem{thm}{Theorem}  % Define new theorem.
 \newtheorem{alg}{Algorithm}[section]  % Define new algorithm.
@@ -42,7 +44,6 @@
 \theoremstyle{definition}
 \theoremstyle{plain}
 \setcounter{secnumdepth}{5}
-
 
 
 \renewcommand{\contentsname}{\ctxfbb Table of Contents}
@@ -54,12 +55,9 @@
 \newcommand{\lotlabel}{Table}
 \setlength{\abovecaptionskip}{0pt}
 
-%\renewcommand{\cftsecpresnum}{Chapter }
 
 \renewcommand{\cftsecnumwidth}{7em}
-%\renewcommand{\thesection}{{\ctxfbb Chapter}~~ \arabic{section}}
-%\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
-%\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+
 \renewcommand{\appendixpagename}{\Large\ctxfbb Appendix} % \ctxfb
 \renewcommand{\arraystretch}{1.2}
 
@@ -104,12 +102,27 @@
 \hoffset=-1cm
 %\marginparwidth=0.5cm
 % ============================================================
-
+% ======================== Paragraph Indent ========================
+\setlength{\parindent}{1em}
+\setlength{\parskip}{1em}
+% ==================================================================
 
 % =============================
 % Equation numbering
 \numberwithin{equation}{section}
 % =============================
+
+% ======================== SubSubSubSection Format ========================
+\titleclass{\subsubsubsection}{straight}[\subsection]
+
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+
+\titleformat{\subsubsubsection}
+  {\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+\titlespacing*{\subsubsubsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+% ==================================================================
 
 \begin{document}
 \setcounter{section}{2}
@@ -118,7 +131,7 @@
 \subsection{\textbf{Other Considerations in the Regression Model}}
 \subsubsection{\textbf{Qualitative Predictors}}
 
-\textbf{\color{blue}{Predictors with Two levels}}:\\
+\subsubsubsection{\color{blue}{Predictors with Two levels}}
 Gender $x_{i}$ as dummy variable:\\
 \begin{gather}
 x_{i} = \left\{
@@ -143,7 +156,7 @@ y_{i} = \beta_{0}+\beta_{1} \times x_{i} + \epsilon_{i} = \beta_{0} + \left\{
 \item $\beta_{1}$: average difference in credit card balance between male and female
 \end{itemize}
 
-\textbf{\color{blue}{Predictors with more than Two Levels}}:\\
+\subsubsubsection{\color{blue}{Predictors with more than Two Levels}}
 Ethnicity $x_{i1},x_{i2}$ as dummy variable:\\
 \begin{gather}
 x_{1i} = \left\{
@@ -173,7 +186,7 @@ y_{i} & = \beta_{0}+\beta_{1} \times x_{1i} + \beta_{2} \times x_{2i} + \epsilon
 \end{align}
 
 \subsubsection{\textbf{Extensions of the Linear Model}}
-\textbf{\color{blue}{Interaction Effect}}:\\
+\subsubsubsection{\color{blue}{Interaction Effect}}
 Consider the linear regression model with one quantitative predictor and one qualitative predictor.
  We are using the credit data as our example, suppose we wish to predict balance using income(quantitative) and student(qualitative) variables. 
  In the absence of an interaction term, the model takes the form:
@@ -273,11 +286,10 @@ This allows for the possibility that changes in income may affect the credit car
 \end{enumerate}
 
 %=============================================================================================
-\textbf{\color{blue}{1. Non-linearity of the Data}}:\\
+\subsubsubsection{\color{blue}{Non-linearity of the Data}}
 Ideally, the residual plot will show no obvious pattern. 
-The presence of a pattern may indicate a problem with non-linearity.
+The presence of a pattern may indicate a problem with non-linearity. \\
 
-~\\~\\
 How to detect Non-linearity:
 \begin{itemize}
 \item Plot the residuals($y_{i}-\hat{y}_{i}$) versus the fitted values $\hat{y}_{i}$ as a residual plot (Figure~\ref{figure-3.9})
@@ -296,7 +308,7 @@ How to solve Non-linearity:
 \end{figure}
 
 %=============================================================================================
-\textbf{\color{blue}{2. Correlation of Error Terms}}:\\
+\subsubsubsection{\color{blue}{Correlation of Error Terms}}
 In the assumption of the linear regression model, the error terms $\epsilon_{1}, \epsilon_{1}, \dots, \epsilon_{n}$ are uncorrelated. 
 If in fact there is correlation among the error term, then \textbf{the estimated standard errors will tend to underestimate the true standard error}.
 Such correlations frequently occur in time series data. In many cases, adjacent observations will have positive correlated errors.
@@ -320,7 +332,7 @@ How to solve Correlation of Error Terms:
 \end{itemize}
 
 %=============================================================================================
-\textbf{\color{blue}{3. Non-Constant Variance of Error Terms(Heteroscedasticity)}}:\\
+\subsubsubsection{\color{blue}{Non-Constant Variance of Error Terms(Heteroscedasticity)}}
 In the assumption of the linear regression model, the variance of error terms are constant(${\rm Var}(\epsilon_{i})=\sigma^{2}$).
 Unfortunately, it is often the case that the variances of the error terms are non-constant.
 
@@ -344,7 +356,7 @@ How to solve Non-Constant Variance of Error Terms:
 
 %=============================================================================================
 
-\textbf{\color{blue}{4. Outliers}}:\\
+\subsubsubsection{\color{blue}{Outliers}}
 How to detect Outliers:
 \begin{itemize}
 \item Plot residual plot and Studentized residual plot to detect outliers (Figure~\ref{figure-3.12})
@@ -362,7 +374,7 @@ How to solve Outliers:
 \item Remove them
 \end{itemize}
 %=============================================================================================
-\textbf{\color{blue}{5. High Leverage Points}}:\\
+\subsubsubsection{\color{blue}{High Leverage Points}}
 Leverage points means the observations have an unusual value of $x_{i}$. 
 High leverage observations tend to have a sizable impact on the estimated regression model.
 
@@ -452,7 +464,7 @@ H = round(H,4)
 \end{lstlisting}
 \end{framed}
 %=============================================================================================
-\textbf{\color{blue}{6. Collinearity}}:\\
+\subsubsubsection{\color{blue}{Collinearity}}
 Collinearity refers to the situation in which two or more predictor variables are closely related to one another. 
 The importance of the predictor variables may be masked if we did not consider Collinearity. 
 

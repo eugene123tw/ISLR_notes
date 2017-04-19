@@ -1,11 +1,7 @@
 \documentclass[12pt,fleqn,a4paper]{article}
-
 \usepackage[style=newter5,citestyle=newter5,backend=biber,uniquename=false,natbib,maxnames=8]{biblatex}
-
 \renewcommand{\bibfont}{\fontsize{12}{20pt}\selectfont}
 \defbibheading{cjkhead}{\par\bigskip\bigskip\noindent{\large \ctxfbb Reference}\par}
-
-
 \usepackage{makeidx}
 \usepackage{bm}
 \usepackage{framed} % Easier way to use Framebox
@@ -36,14 +32,12 @@
 \usepackage{makeidx}
 \usepackage{pdfpages}
 \usepackage[refpage]{nomencl}
-
-
+\usepackage{indentfirst} % indent the first paragraph of new section
 
 \addbibresource{chp_2.bib}
 
-
 \def\se{{\rm se}}
-%\newcommand{\red}{\color{red}}
+
 \linespread{1.5}  % The linespread is 1.5.
 
 % Define new theorem. ==============================================================
@@ -72,7 +66,6 @@
 \renewcommand{\thesection}{\arabic{section}}
 \renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
 \renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
-% \renewcommand{\appendixpagename}{\Large\ctxfbb Appendix} % \ctxfb
 \renewcommand{\arraystretch}{1.2}
 
 %%%%%%%%%%
@@ -91,7 +84,10 @@
 \ctxfdef{\subsection}{\ctxfbb} %\ctxfr
 
 \def\tb#1#2{\mathop{#1\vphantom{\sum}}\limits_{\displaystyle #2}}
-
+% ======================== Paragraph Indent ========================
+\setlength{\parindent}{1em}
+\setlength{\parskip}{1em}
+% ==================================================================
 
 % ======================== Set length ========================
 \setlength{\columnsep}{2.4cm}
@@ -113,7 +109,6 @@ commentstyle=\color{dkgreen},
 stringstyle=\color{mauve},
 %breaklines=true,
 }
-
 
 
 \begin{document}
