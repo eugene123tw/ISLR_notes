@@ -233,7 +233,7 @@ J(\boldsymbol{\theta}) = -\sum\limits_{n}\sum\limits_{k}(\hat{y}_{nk}(\boldsymbo
 
 In the classification case, with $C$ classes, the NLL is given by the cross entropy,
 \begin{equation}
-J(\boldsymbol{\theta}) = -\sum\limits_{n}\sum\limits_{k} y_{nk} \log \hat{y}_{nk}(\boldsymbol{\theta}) 
+J(\boldsymbol{\theta}) = -\sum\limits_{n} \sum\limits_{k} y_{nk} \log \hat{y}_{nk}(\boldsymbol{\theta}) 
 \end{equation}
 
 Our task is to compute $\frac{d}{d\boldsymbol{\theta}}J$. The overall gradient is obtained by summing over $n$, we will derive this for each $n$ separately or we will perform mini-batch and summing the batch size.
@@ -278,8 +278,19 @@ In the end, the input layer weights looks like
 \nabla_{\boldsymbol{\alpha}_{j}} J_{n} = \delta^{\alpha}_{nj} x_{n} = \sum\limits_{k} \delta^{\beta}_{nk} \beta_{kj} g'(a_{nj})x_{n}
 \end{equation}
 
-\subsubsection{Example 1}
+Given the derivatives, a gradient descent update at the $(r+1)$st iteration has the form
+\begin{align*}
+\boldsymbol{\beta}_{k}^{(r+1)} &=  \boldsymbol{\beta}_{k}^{(r)} - \eta \sum\limits_{n} \nabla_{\boldsymbol{\beta}_{k}} J_{n} \\
+\boldsymbol{\alpha}_{j}^{(r+1)} &= \boldsymbol{\alpha}_{j}^{(r)} - \eta \sum\limits_{n} \nabla_{\boldsymbol{\alpha}_{j}} J_{n} 
+\end{align*}
 
+Learning can be carried out online - processing each observation one at a time, updating the gradient after each training case, and cycling through the training cases many times. 
+In this case, the sums of $n$ in the update equations are replaced with single summation $k$. 
+Online training allows the network to handle large training sets, and also update the weights as new observations come in.
+
+The learning rate $\eta$ for batch learning is usually taken to be a constant, and can be optimized by a \textbf{line search}.
+
+\subsubsection{Example 1}
 \begin{figure}[H]
 \centering
 \psfrag{A}[c][c]{$x_{1}$}
@@ -377,5 +388,90 @@ The estimated response,
   \hat{y}_{2}
  \end{pmatrix}
 \end{gather*}
+
+a gradient descent update at the $(r+1)$st iteration has the form
+
+\begin{equation*}
+\boldsymbol{\beta}_{1}^{(r+1)} = \boldsymbol{\beta}_{1}^{(r)} - \eta \sum\limits_{n} \nabla_{\boldsymbol{\beta}_{1}} J_{n} = \begin{pmatrix}
+  \beta_{11} \\
+  \beta_{12} \\
+  \beta_{13}
+ \end{pmatrix} - \eta \left( \sum\limits_{n} (\hat{y}_{n1}-y_{n1})  \begin{pmatrix}
+  z_{n1} \\
+  z_{n2} \\
+  z_{n3}
+ \end{pmatrix} \right)
+\end{equation*}
+
+\begin{equation*}
+\boldsymbol{\beta}_{2}^{(r+1)} = \boldsymbol{\beta}_{2}^{(r)} - \eta \sum\limits_{n} \nabla_{\boldsymbol{\beta}_{2}} J_{n} = \begin{pmatrix}
+  \beta_{21} \\
+  \beta_{22} \\
+  \beta_{23}
+ \end{pmatrix} - \eta \left( \sum\limits_{n} (\hat{y}_{n2}-y_{n2})  \begin{pmatrix}
+  z_{n1} \\
+  z_{n2} \\
+  z_{n3}
+ \end{pmatrix} \right)
+\end{equation*}
+
+
+\begin{equation*}
+\boldsymbol{\alpha}_{1}^{(r+1)} = \boldsymbol{\alpha}_{1}^{(r)} - \eta \sum\limits_{n} \nabla_{\boldsymbol{\alpha}_{1}} J_{n} = \begin{pmatrix}
+  \alpha_{11} \\
+  \alpha_{12} \\
+ \end{pmatrix} - \eta \left( \sum\limits_{n} \sum\limits_{k} (\delta_{nk}^{\beta} \beta_{k1})g'(a_{1}) \begin{pmatrix}
+  x_{n1} \\
+  x_{n2} 
+ \end{pmatrix} \right)
+\end{equation*}
+
+\begin{equation*}
+\boldsymbol{\alpha}_{2}^{(r+1)} = \boldsymbol{\alpha}_{2}^{(r)} - \eta \sum\limits_{n} \nabla_{\boldsymbol{\alpha}_{2}} J_{n} = \begin{pmatrix}
+  \alpha_{21} \\
+  \alpha_{22} \\
+ \end{pmatrix} - \eta \left( \sum\limits_{n} \sum\limits_{k} (\delta_{nk}^{\beta} \beta_{k2})g'(a_{2}) \begin{pmatrix}
+  x_{n1} \\
+  x_{n2} 
+ \end{pmatrix} \right)
+\end{equation*}
+
+\begin{equation*}
+\boldsymbol{\alpha}_{3}^{(r+1)} = \boldsymbol{\alpha}_{3}^{(r)} - \eta \sum\limits_{n} \nabla_{\boldsymbol{\alpha}_{3}} J_{n} = \begin{pmatrix}
+  \alpha_{31} \\
+  \alpha_{32} \\
+ \end{pmatrix} - \eta \left( \sum\limits_{n} \sum\limits_{k} (\delta_{nk}^{\beta} \beta_{k3})g'(a_{3}) \begin{pmatrix}
+  x_{n1} \\
+  x_{n2} 
+ \end{pmatrix} \right)
+\end{equation*}
+
+The graph of back propagation
+\begin{figure}[H]
+\centering
+\psfrag{A}[c][c]{$x_{1}$}
+\psfrag{B}[c][c]{$x_{2}$}
+\psfrag{C}[c][c]{$z_{1}$}
+\psfrag{D}[c][c]{$z_{2}$}
+\psfrag{E}[c][c]{$z_{3}$}
+\psfrag{F}[c][c]{$y_{1}$}
+\psfrag{G}[c][c]{$y_{2}$}
+\psfrag{a}[c][c]{\color{red} \tiny $\alpha_{11}- \delta^{\alpha}_{1} x_{1} $}
+\psfrag{b}[c][c]{\color{red} \tiny $\alpha_{12}- \delta^{\alpha}_{1} x_{2} $}
+\psfrag{c}[c][c]{\color{blue} \tiny $\alpha_{21}- \delta^{\alpha}_{2}x_{1}$}
+\psfrag{d}[c][c]{\color{blue} \tiny $\alpha_{22}- \delta^{\alpha}_{2}x_{2}$}
+\psfrag{e}[c][c]{\tiny $\alpha_{31}- \delta^{\alpha}_{3}x_{1}$}
+\psfrag{f}[c][c]{\tiny $\alpha_{32}- \delta^{\alpha}_{3}x_{2}$}
+\psfrag{g}[c][c]{\tiny $\beta_{11} - \delta^{\beta}_{1} z_{1}$}
+\psfrag{h}[c][c]{\tiny $\beta_{12} - \delta^{\beta}_{1} z_{2}$}
+\psfrag{i}[c][c]{\tiny $\beta_{13} - \delta^{\beta}_{1} z_{3}$}
+\psfrag{j}[c][c]{\tiny $\beta_{21} - \delta^{\beta}_{2} z_{1}$}
+\psfrag{k}[c][c]{\tiny $\beta_{22} - \delta^{\beta}_{2} z_{2}$$}
+\psfrag{l}[c][c]{\tiny $\beta_{23} - \delta^{\beta}_{2} z_{3}$}
+\includegraphics[scale=0.6]{images//example-1_back.eps}
+\\~\\
+\end{figure}
+
+I didn't add learning rate on the update, since the tag is too small to add any words on it.
 
 \end{document}
