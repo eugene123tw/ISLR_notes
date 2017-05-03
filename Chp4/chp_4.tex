@@ -6,7 +6,7 @@
 \usepackage{framed} % Easier way to use Framebox
 \usepackage{pdfpages} % Import PDF in latex document
 \usepackage{listings}
-\usepackage{slashbox}
+% \usepackage{slashbox}
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{amsmath, amssymb, amsthm}  % For mathematical symbols
@@ -289,6 +289,160 @@ This algorithm is referred to as iteratively reweighed least squares (IRLS).
 \end{algorithmic}
 \end{algorithm}
 
+\subsubsubsection{Multi-class logistic Regression}
+For multi-class logistic regression, the model take the form,
+
+\begin{equation*}
+P(y = c| \vec{x} ,\vec{w}) = \frac{e^{w^{c}_{j} x^{j}}} { \sum\limits_{c} e^{ w^{c}_{j} x^{j} } }
+\end{equation*}
+
+\begin{itemize}
+\item $c$ indicates the class, there are totally $C$ classes
+\item $j$ indicates the dimension of variables
+\end{itemize}
+
+Here, the superscript indicates column vector and subscript as row vector. The detail is described as below.
+\begin{equation}
+\vec{a} = \begin{pmatrix}
+ \vdots \\
+  a^{j}  \\
+ \vdots
+\end{pmatrix}
+\end{equation} 
+
+\begin{equation}
+\vec{b} =  ( \cdots ~~~ b_{i} ~~~\cdots )  
+\end{equation} 
+				
+\begin{equation}
+\vec{c} = \begin{pmatrix}
+  &  &  \\
+ &  c_{i}^{j} &   \\
+ &   &
+\end{pmatrix}
+\end{equation} 
+
+$\mathbb{I}(y=c)$ is the binary indicates the outcome class of the observation, if the observation $y$ belongs to $c$ then $\mathbb{I}(y=c)$ equals to 1, else $\mathbb{I}(y=c)$ equals to 0.
+The negative log likelihood is defined as below, 
+\begin{align*}
+L(\vec{w}) = -\ell(\vec{w}) &= - \log \prod\limits_{i=1} \prod\limits_{c=1}  P( {}_iy = c | \vec{w}, {}_ix^{j} )^{\mathbb{I}({}_iy = c)} \\
+										  &= - \sum\limits_{i} \sum\limits_{c}  \mathbb{I}({}_iy = c) \log \frac{e^{ w^{c}_{j} \cdot {}_ix^{j} }} { \sum\limits_{c} e^{ w^{c}_{j} \cdot {}_ix^{j} } } \\
+										  &= \sum\limits_{i} \sum\limits_{c} \mathbb{I}({}_iy = c) ( \log \sum\limits_{c} e^{ w^{c}_{j} \cdot {}_ix^{j} } - w^{c}_{j} \cdot {}_ix^{j}  ) \\
+										  &= \sum\limits_{i} ( \log \sum\limits_{c} e^{ w^{c}_{j} \cdot {}_ix^{j} } - \sum\limits_{c} \mathbb{I}({}_iy = c)  w^{c}_{j} \cdot {}_ix^{j}  )
+\end{align*}
+
+The gradient, 
+\begin{align*}
+\nabla_{ w^{c} } L(\vec{w}) &= \sum\limits_{i} \big( \frac{e^{w^{c}_{j} \cdot {}_ix^{j}}} { \sum\limits_{c} e^{ w^{c}_{j} \cdot {}_ix^{j} } } {}_ix^{j} - \mathbb{I}({}_iy=c) {}_ix^{j}  \big)  \\ 
+														       &= \sum\limits_{i} \big(  P( {}_iy = c |  {}_i\vec{x}, \vec{w})  - \mathbb{I}({}_iy=c)   \big) {}_ix^{j} \\
+														       &=  \big(  P( y = c |  \vec{x}, \vec{w})  - \mathbb{I}(y=c)   \big)  \vec{x}^{T}
+\end{align*}
+
+\subsubsubsection{Multi-class logistic Regression : Example}
+3 Class, 3 Observation, 2 Dimension
+
+\begin{equation}
+\vec{y} = \begin{pmatrix}
+           \\
+  {}_iy \\
+            \\
+\end{pmatrix} =  \begin{pmatrix}
+         1  \\
+         2 \\
+         3  \\
+\end{pmatrix}   
+\end{equation} 
+
+\begin{equation}
+\vec{x} = \begin{pmatrix}
+  &   &  \\
+  &  {}_ix^{j} &  \\
+ &   &
+\end{pmatrix}   = \begin{pmatrix}
+{}_1x^{1} & {}_2x^{1}    & {}_3x^{1}  \\
+{}_1x^{2} & {}_2x^{2} & {}_3x^{2}  \\
+\end{pmatrix}
+\end{equation} 
+
+\begin{equation}
+\vec{w} = \begin{pmatrix}
+  &   &  \\
+  &  w_{j}^{c} &  \\
+ &   &
+\end{pmatrix} = \begin{pmatrix}
+w_{1}^{1} & w_{2}^{1}     \\
+w_{1}^{2} & w_{2}^{2}   \\
+w_{1}^{3} & w_{2}^{3}   
+\end{pmatrix}
+\end{equation} 
+
+\begin{equation}
+\vec{s} = \vec{w} \vec{x} = \begin{pmatrix}
+  &   &  \\
+  &  {}_is^{c} &  \\
+ &   & 
+\end{pmatrix} = \begin{pmatrix}
+{}_1s^{1}  &  {}_2s^{1}    &  {}_3s^{1}  \\
+{}_1s^{2}  &  {}_2s^{2}  &  {}_3s^{2} \\
+{}_1s^{3} & {}_2s^{3}     & {}_3s^{3}
+\end{pmatrix} 
+\end{equation} 
+
+\begin{gather}
+P( y = c |  \vec{x}, \vec{w})  = e^{\vec{s}} / \sum\limits_{c} e^{s^{c}}  = \begin{pmatrix}
+  &   &  \\
+  &  \frac{e^{{}_is^{c}}}{\sum\limits_{c} e^{{}_is^{c}}}  &  \\
+ &   &
+\end{pmatrix} = \\ \begin{pmatrix}
+e^{{}_1s^{1}} /\sum\limits_{c} e^{{}_is^{c}} &  e^{{}_2s^{1}}  /\sum\limits_{c} e^{{}_is^{c}}    &  e^{{}_3s^{1}}  /\sum\limits_{c} e^{{}_is^{c}} \\
+e^{{}_1s^{2}} /\sum\limits_{c} e^{{}_is^{c}} & e^{{}_2s^{2}} /\sum\limits_{c} e^{{}_is^{c}}    & e^{{}_3s^{2}} /\sum\limits_{c} e^{{}_is^{c}} \\
+e^{{}_1s^{3}} /\sum\limits_{c} e^{{}_is^{c}} & e^{{}_2s^{3}}   /\sum\limits_{c} e^{{}_is^{c}}   & e^{{}_3s^{3}}   /\sum\limits_{c} e^{{}_is^{c}} 
+\end{pmatrix} 
+\end{gather} 
+
+\begin{equation}
+\mathbb{I}(\vec{y}=c)  =  \begin{pmatrix}
+\mathbb{I}({}_1y=1) & \mathbb{I}({}_2y=1)  & \mathbb{I}({}_3y=1)  \\
+\mathbb{I}({}_1y=2) & \mathbb{I}({}_2y=2)  & \mathbb{I}({}_3y=2) \\
+\mathbb{I}({}_1y=3) & \mathbb{I}({}_2y=3)  & \mathbb{I}({}_3y=3)\\
+\end{pmatrix} =  \begin{pmatrix}
+1  &  0  & 0  \\
+0 &  1   & 0   \\
+0 &  0  & 1    \\
+\end{pmatrix} 
+\end{equation} 
+
+Loss function,
+\begin{equation}
+ \vec{L} = \mathbb{I}(\vec{y}=c)  P( y = c |  \vec{x}, \vec{w})  =  - \sum \log  \begin{pmatrix}
+e^{{}_1s^{1}} /\sum\limits_{c} e^{{}_is^{c}}  &  0  & 0  \\
+0 &  e^{{}_2s^{2}} /\sum\limits_{c} e^{{}_is^{c}}   & 0   \\
+0 &  0  & e^{{}_3s^{3}}   /\sum\limits_{c} e^{{}_is^{c}}    \\
+\end{pmatrix} 
+\end{equation}
+
+Now compute the gradient, 
+\begin{gather}
+P( y = c |  \vec{x}, \vec{w}) - \mathbb{I}(\vec{y}=c) =  \begin{pmatrix}
+e^{{}_1s^{1}} /\sum\limits_{c} e^{{}_is^{c}} -1 &  e^{{}_2s^{1}}  /\sum\limits_{c} e^{{}_is^{c}}    &  e^{{}_3s^{1}}  /\sum\limits_{c} e^{{}_is^{c}} \\
+e^{{}_1s^{2}} /\sum\limits_{c} e^{{}_is^{c}} & e^{{}_2s^{2}} /\sum\limits_{c} e^{{}_is^{c}}  -1  & e^{{}_3s^{2}} /\sum\limits_{c} e^{{}_is^{c}} \\
+e^{{}_1s^{3}} /\sum\limits_{c} e^{{}_is^{c}} & e^{{}_2s^{3}}   /\sum\limits_{c} e^{{}_is^{c}}   & e^{{}_3s^{3}}   /\sum\limits_{c} e^{{}_is^{c}} -1
+\end{pmatrix} 
+\end{gather} 
+
+\begin{gather}
+\nabla_{ w^{c} } L(\vec{w})  =  \big(  P( y = c |  \vec{x}, \vec{w})  - \mathbb{I}(y=c)   \big)  \vec{x} ^{T}= \\
+\begin{pmatrix}
+e^{{}_1s^{1}} /\sum\limits_{c} e^{{}_is^{c}} -1 &  e^{{}_2s^{1}}  /\sum\limits_{c} e^{{}_is^{c}}    &  e^{{}_3s^{1}}  /\sum\limits_{c} e^{{}_is^{c}} \\
+e^{{}_1s^{2}} /\sum\limits_{c} e^{{}_is^{c}} & e^{{}_2s^{2}} /\sum\limits_{c} e^{{}_is^{c}}  -1  & e^{{}_3s^{2}} /\sum\limits_{c} e^{{}_is^{c}} \\
+e^{{}_1s^{3}} /\sum\limits_{c} e^{{}_is^{c}} & e^{{}_2s^{3}}   /\sum\limits_{c} e^{{}_is^{c}}   & e^{{}_3s^{3}}   /\sum\limits_{c} e^{{}_is^{c}} -1
+\end{pmatrix} \begin{pmatrix}
+{}_1x^{1}    & {}_1x^{2}  \\
+ {}_2x^{1}   & {}_2x^{2}   \\
+{}_3x^{1}    &  {}_3x^{2} \\
+\end{pmatrix} 
+\end{gather} 
+
 \subsubsection{Discussion}
 \begin{enumerate}
 \item How to calculate the fitness of logistic model?
@@ -340,7 +494,7 @@ In the following section, we have to make assumptions and approximates $f_{k}(X)
 \begin{CJK}{UTF8}{cwmb}
 \begin{definition}[The law of total probability]
 ~\\
-設 $A_{1},A_{2},\dots,A_{n}$ 為樣本空間$S$中之一組分割, 則對於樣本空間$S$之任意事件$B$而言,
+設 $A_{1},A_{2},\dots,A_{n}$ 為樣本空間$S$中之一組分割, 則對於樣本空間$S$之任意事件$B$而言, 
 
 \begin{gather*}
 P(B) = \sum\limits_{i=1}^{n}P(B|A_{i})P(A_{i})
