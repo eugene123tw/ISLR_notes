@@ -92,7 +92,7 @@
 
 \begin{document}
 \section{April 23}
-\subsection{How to adjust Learning Rate}
+\subsection{How to adjust Learning Rate : The Newton-Raphson Method}
 
 Assume the objective function,
 \begin{equation}
@@ -201,6 +201,7 @@ Applying the learning rate $\alpha_{1} = \frac{1}{6(\theta_{1}^{*})^{2} - 2 \the
 \textbf{R code:}
 \tiny
 \begin{lstlisting}[language=R]
+# The Newton-Raphson Method
 library(ggplot2)
 
 mytheme = theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank())

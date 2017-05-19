@@ -179,7 +179,7 @@ Instead, we need to use an optimization algorithm to compute it.
 For this, we need to derive the gradient and Hessian. The likelihood function of logistic model:
 
 \begin{gather}
-L(\beta) = \prod_{i=1}^{n} p(x_{i};\beta)^{y_{i}} (1-p(x_{i};\beta))^{1-y_{i}},~\text{where~} R_{y_{i}}=\{0,1\}
+L(\beta) = \prod_{i=1}^{n} p(x_{i};\beta)^{\mathbb{I}(y_{i})} (1-p(x_{i};\beta))^{ \mathbb{I}(1-y_{i}) },~\text{where~} R_{y_{i}}=\{0,1\}
 \end{gather}
 
 The log-likelihood of logistic model:
@@ -301,28 +301,7 @@ P(y = c| \vec{x} ,\vec{w}) = \frac{e^{w^{c}_{j} x^{j}}} { \sum\limits_{c} e^{ w^
 \item $j$ indicates the dimension of variables	
 \end{itemize}
 
-Here, the superscript indicates column vector and subscript as row vector. The detail is described as below.
-\begin{equation}
-\vec{a} = \begin{pmatrix}
- \vdots \\
-  a^{j}  \\
- \vdots
-\end{pmatrix}
-\end{equation} 
-
-\begin{equation}
-\vec{b} =  ( \cdots ~~~ b_{i} ~~~\cdots )  
-\end{equation} 
-				
-\begin{equation}
-\vec{c} = \begin{pmatrix}
-  &  &  \\
- &  c_{i}^{j} &   \\
- &   &
-\end{pmatrix}
-\end{equation} 
-
-$\mathbb{I}(y=c)$ is the binary indicates the outcome class of the observation, if the observation $y$ belongs to $c$ then $\mathbb{I}(y=c)$ equals to 1, else $\mathbb{I}(y=c)$ equals to 0.
+$\mathbb{I}(y=c)$ is the one of k encoding, if the observation $y$ belongs to $c$ then $\mathbb{I}(y=c)$ equals to 1, else elements are equal to 0.
 The negative log likelihood is defined as below, 
 \begin{align*}
 L(\vec{w}) = -\ell(\vec{w}) &= - \log \prod\limits_{i=1} \prod\limits_{c=1}  P( {}_iy = c | \vec{w}, {}_ix^{j} )^{\mathbb{I}({}_iy = c)} \\

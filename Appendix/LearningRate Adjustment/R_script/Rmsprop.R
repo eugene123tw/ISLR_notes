@@ -1,4 +1,5 @@
-# The Newton-Raphson Method
+# RMSprop
+
 library(ggplot2)
 
 mytheme = theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank())
@@ -19,12 +20,24 @@ plot = ggplot(data, aes(x = x, y = y, z=response)) + stat_contour(binwidth = 0.2
 
 searching = data.frame(theta1=rep(0,100),theta2=rep(0,100),response=rep(0,100))
 
-theta1 = 0
-theta2 = 0
+theta1 = dunif(1,0,3)
+theta2 = dunif(1,0,3)
+decay = 0.9
+cache1 = 0 
+cache2 = 0
 
-for(i in 1:100){
-  theta1_new = theta1 - ((1/((6*(theta1^{2}))-(2*theta2)+1)))*(2*theta1^{3}-2*theta1*theta2+theta1-1)
-  theta2_new = theta2 - (1)*(-(theta1^2)+theta2)
+for(i in 1:2500){
+  
+  dtheta1 = (2*theta1^{3}-2*theta1*theta2+theta1-1)
+  dtheta2 = (-(theta1^2)+theta2)
+  lr1 = 0.001
+  lr2 = 0.001
+  
+  cache1 = decay*cache1 + (1-decay)*(dtheta1^2)
+  cache2 = decay*cache2 + (1-decay)*(dtheta2^2)
+  
+  theta1_new = theta1 - lr1*dtheta1/(cache1+1e-7)
+  theta2_new = theta2 - lr2*dtheta2/(cache2+1e-7)
   response_value = response(theta1_new,theta2_new)
   
   theta1 = theta1_new
