@@ -1,6 +1,5 @@
 # Notes for Machine Learning
-
-This repo includes my notes related to Statistical Learning and Machine Learning.  
+  
 Most of the materials come from [Machine Learning](https://mitpress.mit.edu/books/machine-learning-0) written by Kevin Murphy, [An Introduction to Statistical Learning](http://www-bcf.usc.edu/~gareth/ISL/) and [The Elements of Statistical Learning](https://statweb.stanford.edu/~tibs/ElemStatLearn/) written by Robert Tibshirani and Trevor Hastie.  
 
 # Contents:
