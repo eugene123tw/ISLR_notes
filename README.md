@@ -8,6 +8,7 @@ Most of the materials come from [Machine Learning](https://mitpress.mit.edu/book
 * Chapter 3: Linear Regression
 * Chapter 4: Classifications
 * Chapter 5: Resampling Methods
+* Chapter 6: Model Selection and Regularization
 * Chapter 11: Neural Network
 
 
