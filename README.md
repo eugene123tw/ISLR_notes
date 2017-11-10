@@ -1,6 +1,14 @@
-# Notes for "An Introduction to Statistical Learning" and "The Elements of Statistical Learning" by Hastie
-Notes for "An Introduction to Statistical Learning" and "The Elements of Statistical Learning".  
-I try to prove the theories and explain the concepts which are not included in the books.  
-I make mistakes. So, if you have found one, please inform me.  
-"Writing is nature's way of letting you know how sloppy your thinking is" - Dick Guindon.  
-Making notes is the way of letting me know how lousy my thinking is.  
+# Notes for Machine Learning
+  
+Most of the materials come from [Machine Learning](https://mitpress.mit.edu/books/machine-learning-0) written by Kevin Murphy, [An Introduction to Statistical Learning](http://www-bcf.usc.edu/~gareth/ISL/) and [The Elements of Statistical Learning](https://statweb.stanford.edu/~tibs/ElemStatLearn/) written by Robert Tibshirani and Trevor Hastie.  
+
+# Contents:
+
+* Chapter 2: Statistical Learning
+* Chapter 3: Linear Regression
+* Chapter 4: Classifications
+* Chapter 5: Resampling Methods
+* Chapter 6: Model Selection and Regularization
+* Chapter 11: Neural Network
+
+
