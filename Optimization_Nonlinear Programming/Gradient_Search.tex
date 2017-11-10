@@ -1,0 +1,250 @@
+\documentclass[12pt,a4paper]{article}%
+\usepackage{makeidx}
+\makeindex
+\usepackage{bm}
+\usepackage{framed} % Easier way to use Framebox
+\usepackage{pdfpages} % Import PDF in latex document
+\usepackage{listings}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{amsmath, amssymb, amsthm}  % For mathematical symbols
+\usepackage{colortbl,color}
+\usepackage{xcolor}
+\usepackage{auto-pst-pdf}
+\usepackage{graphicx,psfrag}
+\usepackage{tabularx,array}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage[subfigure]{tocloft}
+\usepackage[tight]{subfigure}
+\usepackage{float,booktabs,threeparttable}
+\usepackage{caption}
+\usepackage{mathtools} % add text on arrows
+\usepackage{longtable}
+\usepackage{appendix}
+\usepackage{pdfpages}
+\usepackage{blkarray} %For adding Matrix label on row and column
+\usepackage{url}
+\usepackage{indentfirst} % indent the first paragraph of new section
+\usepackage{titlesec} % change the way \subsubsubsection formats
+\usepackage{mathtools} % for pre-superscript and pre-subscript on notation
+
+\def\se{{\rm se}}
+%\newcommand{\red}{\color{red}}
+\linespread{1.5}  % The linespread is 1.5.
+
+% Numbered theorems, definitions, algorithm and lemmas ======================================================================
+\newtheorem{thm}{Theorem}  % Define new theorem.
+\newtheorem{alg}{Algorithm}[section]  % Define new algorithm.
+\newtheorem{definition}{Definition}
+% ===========================================================================================================================
+
+% For writing pseudo code ======================================================================
+\usepackage{algorithm}% http://ctan.org/pkg/algorithms
+\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+% ===========================================================================================================================
+
+\theoremstyle{definition}
+\theoremstyle{plain}
+\setcounter{secnumdepth}{5}
+
+
+\renewcommand{\contentsname}{Table of Contents}
+\renewcommand{\listfigurename}{List of Figures}
+\renewcommand{\listtablename}{List of Tables}
+\renewcommand{\figurename}{\footnotesize Figure}
+\renewcommand{\tablename}{\footnotesize Table}
+\newcommand{\loflabel}{Figure}
+\newcommand{\lotlabel}{Table}
+\setlength{\abovecaptionskip}{0pt}
+
+
+\renewcommand{\cftsecnumwidth}{7em}
+\renewcommand{\appendixpagename}{\Large Appendix} % \ctxfb
+\renewcommand{\arraystretch}{1.2}
+
+\usepackage{appendix}
+
+
+
+%%%%%%%%%%%%
+
+\newtheorem{lma}{\textbf{Lemma}}
+
+% ======================== Set length ========================
+\setlength{\columnsep}{1cm}
+\setlength\parindent{0pt}
+\textheight = 22cm
+\textwidth = 16.5cm
+\hoffset=-1cm
+\footskip=40pt
+\renewcommand*{\arraystretch}{0.8}
+% ============================================================
+% ======================== Paragraph Indent ========================
+\setlength{\parindent}{1em}
+\setlength{\parskip}{1em}
+% ==================================================================
+% =============================
+% Equation numbering
+\numberwithin{equation}{section}
+% =============================
+% ======================== SubSubSubSection Format ========================
+\titleclass{\subsubsubsection}{straight}[\subsection]
+
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection.\arabic{subsubsubsection}}
+
+\titleformat{\subsubsubsection}
+  {\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+\titlespacing*{\subsubsubsection}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+% ==================================================================
+
+\begin{document}
+\setcounter{section}{0}
+\section{Gradient Search Procedure}
+
+\subsection{Feedforward neural networks}
+
+\subsection{Backpropagation neural networks}
+
+\subsection{General form of Feed-forward and Back-propagation}
+
+\subsubsection{Notation}
+\begin{itemize}
+\item $\overrightarrow{X}_{\ell}$ : denotes the input data matrix in layer $\ell$ with $N$ input size and $D$ input dimensional size.  
+\item $\overrightarrow{W}_{\ell}$ : denotes the weight matrix in layer $\ell$ with $D$ input dimensional size and $H$ output layer size.
+\item $\vec{b}_{\ell}$ : denotes the bias vector in layer $\ell$ with $H$ output layer size.
+\item $\overrightarrow{a}_{\ell}$ : denotes the output matrix before activation from layer $\ell$.
+\item $f_{\ell}(\cdot)$ : denotes the activation function in layer $\ell$. 
+\end{itemize}
+
+\begin{equation*}
+\overrightarrow{X}_{\ell} =  \begin{blockarray}{cccc}
+                                     & \multicolumn{3}{c}{$D$}  \\
+\begin{block}{c(ccc)}
+\multirow{3}{*}{$N$} &    &       &    \\
+  					                 &      &  \prescript{n}{}{(x_{\ell})}_{d}     &     \\
+			     	                 &      &       &       \\
+\end{block}
+\end{blockarray}
+\end{equation*}
+
+\begin{equation*}
+\overrightarrow{W}_{\ell} =  \begin{blockarray}{cccc}
+                                     & \multicolumn{3}{c}{$H$}  \\
+\begin{block}{c(ccc)}
+\multirow{3}{*}{$D$} &    &       &    \\
+  					                 &      &  {(w_{\ell})}^{d}_{h}     &     \\
+			     	                 &      &       &       \\
+\end{block}
+\end{blockarray}
+\end{equation*}
+
+\begin{equation*}
+\vec{b}_{\ell} =  \begin{blockarray}{ccc}
+    \multicolumn{3}{c}{$H$}  \\
+\begin{block}{(ccc)}
+    &    {(b_{\ell})}_{h}     &    \\
+\end{block}
+\end{blockarray}
+\end{equation*}
+
+\begin{equation*}
+\overrightarrow{a}_{\ell} =  \begin{blockarray}{cccc}
+                                     & \multicolumn{3}{c}{$H$}  \\
+\begin{block}{c(ccc)}
+\multirow{3}{*}{$N$} &    &       &    \\
+  					                 &      & \prescript{n}{}{(a_{\ell})}_{h} =  \prescript{n}{}{(x_{\ell})}_{d} \cdot {(w_{\ell-1})}^{d}_{h}  + (b_{\ell-1})_{h}    &     \\
+			     	                 &      &       &       \\
+\end{block}
+\end{blockarray}
+\end{equation*}
+
+\begin{equation}
+\overrightarrow{X}_{\ell+1} = f_{\ell}(\overrightarrow{a}_{\ell} )
+\end{equation}
+
+\subsubsubsection{Feed-Forward Neural Network}
+
+For a two layer fully-connected neural network ,  the network has the following architecture: 
+\begin{equation}
+\footnotesize
+\overrightarrow{X}_{\ell-1} \mapsto \overrightarrow{a}_{\ell-1} = \overrightarrow{X}_{\ell-1} \overrightarrow{W}_{\ell-2} \rightarrow 
+\overrightarrow{X}_{\ell} = f_{\ell-1}(\overrightarrow{a}_{\ell-1}) \mapsto \overrightarrow{a}_{\ell} = \overrightarrow{X}_{\ell} \overrightarrow{W}_{\ell-1} \rightarrow \hat{y} = \text{softmax}(\overrightarrow{a}_{\ell})
+\end{equation}
+
+We denote the loss function as,
+\begin{equation}
+L = loss(y, \hat{y}) = \sum\limits_{n} \sum\limits_{h} loss(\prescript{n}{}{y_{h}}, \prescript{n}{}{\hat{y}}_{h})
+\end{equation}
+
+\subsubsubsection{Back-propagation Neural Network}
+Let us start by considering the last layer weights ${(w_{\ell-1})}^{d}_{h} $ and perform the derivative on the loss function
+\begin{equation}
+\frac{\partial}{\partial {(w_{\ell-1})}^{d}_{h}} L = \frac{\partial L}{\partial \prescript{n}{}{(a_{\ell})}_{h}} \frac{\partial \prescript{n}{}{(a_{\ell})}_{h}}{\partial {(w_{\ell-1})}^{d}_{h}} = \frac{\partial L}{\partial \prescript{n}{}{(a_{\ell})}_{h}}  \prescript{n}{}{(x_{\ell})}_{d} =  \prescript{n}{}{(\delta_{\ell})}_{h} \cdot \prescript{n}{}{(x_{\ell})}_{d} = \prescript{}{n}{(x_{\ell}^{T})}^{d} \cdot \prescript{n}{}{(\delta_{\ell})}_{h} 
+\end{equation}
+
+For the ease of notation,  we denote  $\prescript{n}{}{(\delta_{\ell})}_{h}$ as the error signal in layer $\ell$. Now, we derivative of ${(w_{\ell-2})}^{d}_{h}$ on the loss function, 
+\begin{align}
+\frac{\partial}{\partial {(w_{\ell-2})}^{d}_{h}} L  &=  \frac{\partial L}{\partial \prescript{n}{}{(a_{\ell-1})}_{h}} \frac{\partial \prescript{n}{}{(a_{\ell-1})}_{h}}{\partial {(w_{\ell-2})}^{d}_{h}} \\
+& = \frac{\partial L}{\partial \prescript{n}{}{(a_{\ell-1})}_{h}}  \prescript{n}{}{(x_{\ell-1})}_{d} \\
+& = \prescript{}{n}{(x_{\ell-1}^{T})}^{d} \cdot \prescript{n}{}{(\delta_{\ell-1})}_{h} 
+\end{align}
+
+
+For a two layer($\ell = 2$) fully connected neural network,  the error signal for the last layer has the below form,
+\begin{align}
+\begin{split}
+\prescript{n}{}{(\delta_{\ell})}_{h} &= \frac{\partial L}{\partial \prescript{n}{}{(a_{\ell})}_{h}} \\
+															  &= loss'(y,\hat{y}) \hat{y}' \\
+															  &= loss'(y,\hat{y}) \odot f'_{\ell}(\prescript{n}{}{(a_{\ell})}_{h})
+\end{split}
+\end{align}
+
+For the error signal in the first layer,
+\begin{align*}
+\begin{split}
+\prescript{n}{}{(\delta_{\ell-1})}_{h} &= \frac{\partial L}{\partial \prescript{n}{}{(a_{\ell-1})}_{h}} \\
+																  &= \sum\limits_{d} \frac{\partial L}{\partial \prescript{n}{}{(a_{\ell})}_{d}} \cdot \frac{\partial \prescript{n}{}{(a_{\ell})}_{d}}{\partial \prescript{n}{}{(a_{\ell-1})}_{h}} \\
+														          &= \sum\limits_{d} 	\prescript{n}{}{(\delta_{\ell})}_{d} \cdot \frac{\partial \prescript{n}{}{(a_{\ell})}_{d}}{\partial \prescript{n}{}{(a_{\ell-1})}_{h}}			  
+\end{split}
+\label{delta1}
+\end{align*}
+
+We'll show how to proof $\frac{\partial \prescript{n}{}{(a_{\ell})}_{d}}{\partial \prescript{n}{}{(a_{\ell-1})}_{h}}$. For $ \prescript{n}{}{(a_{\ell})}_{d}   $, we know that 
+\begin{align*}
+\prescript{n}{}{(a_{\ell})}_{d} &= \prescript{n}{}{(x_{\ell})}_{h} \cdot {(w_{\ell-1})}^{h}_{d}  + (b_{\ell-1})_{d} \\
+													  &= f_{\ell-1}(\prescript{n}{}{(a_{\ell-1})}_{h}) {(w_{\ell-1})}^{h}_{d} + (b_{\ell-1})_{d}
+\end{align*}
+So,
+\begin{equation}
+\frac{\partial \prescript{n}{}{(a_{\ell})}_{d}}{\partial \prescript{n}{}{(a_{\ell-1})}_{h}} = f'_{\ell-1}(\prescript{n}{}{(a_{\ell-1})}_{h}) {(w_{\ell-1})}^{h}_{d} 
+\end{equation}
+
+Finally, the complete form of the error signal in the first layer,
+\begin{align*}
+\prescript{n}{}{(\delta_{\ell-1})}_{h} &= f'_{\ell-1}(\prescript{n}{}{(a_{\ell-1})}_{h}) \sum\limits_{d} 	\prescript{n}{}{(\delta_{\ell})}_{d} \cdot  {(w_{\ell})}^{h}_{d} \\
+																  &= f'_{\ell-1}(\prescript{n}{}{(a_{\ell-1})}_{h}) \odot \prescript{n}{}{(\delta_{\ell})}_{d} \cdot {(w_{\ell}^{T})}^{d}_{h}
+\end{align*}
+
+The gradient of bias is similar with the above proof,
+\begin{align*}
+\frac{\partial}{\partial {(b_{\ell})}_{h}} L  &= \frac{\partial L}{\partial \prescript{n}{}{(a_{\ell})}_{h}} \frac{\partial \prescript{n}{}{(a_{\ell})}_{h}}{\partial {(b_{\ell})}_{h}} = \sum\limits_{n} \prescript{n}{}{(\delta_{\ell})}_{h} \\
+\frac{\partial}{\partial {(b_{\ell-1})}_{h}} L  &= \frac{\partial L}{\partial \prescript{n}{}{(a_{\ell-1})}_{h}} \frac{\partial \prescript{n}{}{(a_{\ell-1})}_{h}}{\partial {(b_{\ell-1})}_{h}} = \sum\limits_{n} \prescript{n}{}{(\delta_{\ell-1})}_{h}
+\end{align*}
+
+The loss function, full gradients and L2 regularization, 
+\begin{align*}
+ L &= loss({y}, {\hat{y}}) + \frac{\lambda}{2} ( \overrightarrow{W}_\ell^2 + \overrightarrow{W}_{\ell-1}^2 ) \\
+\frac{\partial}{\partial {(w_{\ell})}^{d}_{h}} L &= \prescript{}{n}{(x_{\ell}^{T})}^{d} \cdot \prescript{n}{}{(\delta_{\ell})}_{h} + \lambda {(w_{\ell})}^{d}_{h} \\
+																				  &= \prescript{}{n}{(x_{\ell}^{T})}^{d} (loss'(y,\hat{y}) \odot f'_{\ell}(\prescript{n}{}{(a_{\ell})}_{h})) + \lambda {(w_{\ell})}^{d}_{h} \\
+\frac{\partial}{\partial {(w_{\ell-1})}^{d}_{h}} L &= \prescript{}{n}{(x_{\ell-1}^{T})}^{d} \prescript{n}{}{(\delta_{\ell})}_{h} + \lambda {(w_{\ell-1})}^{d}_{h} \\
+																					 &= \prescript{}{n}{(x_{\ell-1}^{T})}^{d} \cdot  (f'_{\ell-1}(\prescript{n}{}{(a_{\ell-1})}_{h}) \odot (\prescript{n}{}{(\delta_{\ell})}_{d} \cdot {(w_{\ell}^{T})}^{d}_{h})) + \lambda {(w_{\ell-1})}^{d}_{h} \\
+\frac{\partial}{\partial {(b_{\ell})}_{h}} L  &= \frac{\partial L}{\partial \prescript{n}{}{(a_{\ell})}_{h}} \frac{\partial \prescript{n}{}{(a_{\ell})}_{h}}{\partial {(b_{\ell})}_{h}} = \sum\limits_{n} \prescript{n}{}{(\delta_{\ell})}_{h} \\
+\frac{\partial}{\partial {(b_{\ell-1})}_{h}} L  &= \frac{\partial L}{\partial \prescript{n}{}{(a_{\ell-1})}_{h}} \frac{\partial \prescript{n}{}{(a_{\ell-1})}_{h}}{\partial {(b_{\ell-1})}_{h}} = \sum\limits_{n} \prescript{n}{}{(\delta_{\ell-1})}_{h}
+\end{align*} 
+
+
+\end{document}

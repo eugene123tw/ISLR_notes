@@ -5,7 +5,7 @@
 \usepackage{framed} % Easier way to use Framebox
 \usepackage{pdfpages} % Import PDF in latex document
 \usepackage{listings}
-\usepackage{slashbox}
+% \usepackage{slashbox}
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{amsmath, amssymb, amsthm}  % For mathematical symbols
@@ -232,6 +232,19 @@ The estimation of coefficients is done by introducing a $\ell 2$ regulation in t
 \hat{\beta}^{ridge}_{\lambda} = \arg\min_{\beta} \sum\limits_{i=1}^{n} \bigg( y_{i}-\beta_{0}- \sum\limits_{j=1}^{p}\beta_{j}x_{ij} \bigg)^{2} + \lambda \sum\limits_{j=1}^{p}\beta_{j}^{2}
 \label{ridgeFormula}
 \end{gather}
+
+Another way to describe ridge regression,
+\begin{equation}
+\begin{aligned}
+\begin{split}
+& \underset{\beta}{\text{minimize}} & & Z = \sum\limits_{i=1}^{n} \bigg( y_{i}-\beta_{0}- \sum\limits_{j=1}^{p}\beta_{j}x_{ij} \bigg)^{2} \\
+& \text{subject to} 				& & \\
+& & & \sum\limits_{j=1}^{p}\beta_{j}^{2} \leq s
+\end{split}
+\end{aligned}
+\label{lasso}
+\end{equation}
+
 It's simple to get the closed form of $\hat{\beta}^{ridge}_{\lambda}$ by first order differential,
 \begin{gather*}
 \hat{\beta}^{ridge}_{\lambda} = (\lambda \mathbf{I}_{D} + \mathbf{X}^{T} \mathbf{X})^{-1} \mathbf{X}^{T} \mathbf{y}
